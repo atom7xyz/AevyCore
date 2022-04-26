@@ -1,0 +1,12 @@
+permissions:
+  RELOAD_PERM: "aevycore.reload"
+
+messages:
+  PREFIX: "&b AevyCore &7» "
+  SUCCESS: "&a"
+  ERROR: "&c"
+  NORMAL: "&f"
+  errors:
+    NO_PERMS: "You can't execute this command!"
+    NO_PLAYER: "You can't execute this command as a player!"
+    NO_CONSOLE: "You can't execute this command as the console!"
