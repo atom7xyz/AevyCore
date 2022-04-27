@@ -1,0 +1,10 @@
+fun.aevy.aevycore
+fun.aevy.aevycore.commands
+fun.aevy.aevycore.events
+fun.aevy.aevycore.struct.elements
+fun.aevy.aevycore.struct.manager
+fun.aevy.aevycore.utils.builders
+fun.aevy.aevycore.utils.configuration
+fun.aevy.aevycore.utils.configuration.entries
+fun.aevy.aevycore.utils.formatting
+fun.aevy.aevycore.utils.strings

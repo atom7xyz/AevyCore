@@ -78,6 +78,7 @@ public class ItemBuilder
     /**
      * Change the durability of the item.
      * @param dur The durability to set it to.
+     * @return The item with the new durability.
      */
     public ItemBuilder setDurability(short dur)
     {
@@ -85,6 +86,11 @@ public class ItemBuilder
         return this;
     }
 
+    /**
+     * Adds a flag to the item.
+     * @param itemFlag The flag to be added.
+     * @return The item with the new flag.
+     */
     public ItemBuilder addItemFlag(ItemFlag itemFlag)
     {
         ItemMeta im = is.getItemMeta();
@@ -109,6 +115,7 @@ public class ItemBuilder
     /**
      * Set the display name of the item.
      * @param name The name to change it to.
+     * @return The item with the new name.
      */
     public ItemBuilder setName(String name)
     {
@@ -122,6 +129,7 @@ public class ItemBuilder
      * Add an unsafe enchantment.
      * @param enchantment The enchantment to add.
      * @param level The level to put the enchant on.
+     * @return The item with the new unsafe enchantment.
      */
     public ItemBuilder addUnsafeEnchantment(Enchantment enchantment, int level)
     {
@@ -132,6 +140,7 @@ public class ItemBuilder
     /**
      * Remove a certain enchant from the item.
      * @param enchantment The enchantment to remove
+     * @return The item with the enchantment removed.
      */
     public ItemBuilder removeEnchantment(Enchantment enchantment)
     {
@@ -142,6 +151,7 @@ public class ItemBuilder
     /**
      * Set the skull owner for the item. Works on skulls only.
      * @param owner The name of the skull's owner.
+     * @return The skull with a new owner.
      */
     @SneakyThrows
     public ItemBuilder setSkullOwner(String owner)
@@ -156,6 +166,7 @@ public class ItemBuilder
      * Add an enchant to the item.
      * @param enchantment The enchant to add
      * @param level The level
+     * @return The item with the enchantment added.
      */
     public ItemBuilder addEnchant(Enchantment enchantment, int level)
     {
@@ -168,6 +179,7 @@ public class ItemBuilder
     /**
      * Add multiple enchants at once.
      * @param enchantments The enchants to add.
+     * @return The item with the enchantment added.
      */
     public ItemBuilder addEnchantments(Map<Enchantment, Integer> enchantments)
     {
@@ -177,6 +189,7 @@ public class ItemBuilder
 
     /**
      * Sets infinity durability on the item by setting the durability to Short.MAX_VALUE.
+     * @return The item with infinite durability.
      */
     public ItemBuilder setInfiniteDurability()
     {
@@ -187,6 +200,7 @@ public class ItemBuilder
     /**
      * Re-sets the lore.
      * @param lore The lore to set it to.
+     * @return The item with the new lore.
      */
     public ItemBuilder setLore(String... lore)
     {
@@ -196,6 +210,7 @@ public class ItemBuilder
     /**
      * Re-sets the lore.
      * @param lore The lore to set it to.
+     * @return The item with the new lore.
      */
     public ItemBuilder setLore(List<String> lore)
     {
@@ -209,6 +224,7 @@ public class ItemBuilder
 
     /**
      * Remove a lore line.
+     * @return The item with a lore line removed.
      */
     public ItemBuilder removeLoreLine(String line)
     {
@@ -227,6 +243,7 @@ public class ItemBuilder
     /**
      * Remove a lore line.
      * @param index The index of the lore line to remove.
+     * @return The item with the lore line removed.
      */
     public ItemBuilder removeLoreLine(int index)
     {
@@ -245,6 +262,7 @@ public class ItemBuilder
     /**
      * Add a lore line.
      * @param line The lore line to add.
+     * @return The item with the new lore line added.
      */
     public ItemBuilder addLoreLine(String line)
     {
@@ -262,6 +280,7 @@ public class ItemBuilder
      * Add a lore line.
      * @param line The lore line to add.
      * @param pos The index of where to put it.
+     * @return The item with the new lore line added.
      */
     public ItemBuilder addLoreLine(String line, int pos)
     {
@@ -288,8 +307,9 @@ public class ItemBuilder
     /**
      * Sets the dye color of a wool item. Works only on wool.
      * @deprecated As of version 1.2 changed to setDyeColor.
-     * @see ItemBuilder@setDyeColor(DyeColor)
+     * @see ItemBuilder#setDyeColor(DyeColor)
      * @param color The DyeColor to set the wool item to.
+     * @return The colored wool.
      */
     @Deprecated
     public ItemBuilder setWoolColor(DyeColor color)
@@ -304,6 +324,7 @@ public class ItemBuilder
     /**
      * Sets the armor color of a leather armor piece. Works only on leather armor pieces.
      * @param color The color to set it to.
+     * @return The colored leather armor.
      */
     @SneakyThrows
     public ItemBuilder setLeatherArmorColor(Color color)

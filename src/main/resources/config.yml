@@ -10,3 +10,6 @@ messages:
     NO_PERMS: "You can't execute this command!"
     NO_PLAYER: "You can't execute this command as a player!"
     NO_CONSOLE: "You can't execute this command as the console!"
+
+commands:
+  RELOAD_MESSAGE: "Configuration has been reloaded!"

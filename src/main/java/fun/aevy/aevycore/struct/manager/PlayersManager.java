@@ -6,6 +6,11 @@ import fun.aevy.aevycore.utils.builders.ManagerBuilder;
 import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.entity.Player;
 
+/**
+ * Manages the {@link AevyPlayer}s.
+ * @since 1.0
+ * @author Sorridi
+ */
 public class PlayersManager extends ManagerBuilder<AevyPlayer, ObjectUtils.Null>
 {
     public PlayersManager(AevyCore aevyCore)

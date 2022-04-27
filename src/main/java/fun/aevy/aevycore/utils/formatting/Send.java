@@ -6,6 +6,11 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+/**
+ * Utility class used to send formatted messages to {@link CommandSender}s.
+ * @since 1.0
+ * @author Sorridi
+ */
 public class Send
 {
     private final StringUtils stringUtils;

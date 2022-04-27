@@ -2,7 +2,7 @@ package fun.aevy.aevycore.utils.builders;
 
 import fun.aevy.aevycore.AevyCore;
 import fun.aevy.aevycore.utils.configuration.Config;
-import fun.aevy.aevycore.utils.configuration.entries.MessageEntries;
+import fun.aevy.aevycore.utils.configuration.entries.DefaultEntries;
 import fun.aevy.aevycore.utils.formatting.Send;
 import fun.aevy.aevycore.utils.strings.StringUtils;
 import lombok.Getter;
@@ -18,6 +18,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Creates and registers new {@link Command}s.
+ * @since 1.0
+ * @author Sorridi, Niketion
+ */
 @SuppressWarnings("unused")
 @Getter
 public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
@@ -29,7 +34,7 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
 
     protected final AevyCore    aevyCore;
     protected final Send        send;
-    private final Config        config;
+    protected final Config        config;
     protected final StringUtils stringUtils;
 
     /**
@@ -48,10 +53,10 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
             @NotNull    JavaPlugin plugin,
             @Nullable   String permission,
             @NotNull    String command,
-            boolean     onlyPlayer,
-            boolean     onlyConsole,
+                        boolean onlyPlayer,
+                        boolean onlyConsole,
             @Nullable   List<String> usage,
-            boolean     tabComplete
+                        boolean tabComplete
     ) {
         this.aevyCore       = aevyCore;
         this.plugin         = plugin;
@@ -77,23 +82,27 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
     public abstract List<String> tabComplete(String[] args);
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
+    public boolean onCommand(
+            @NotNull    CommandSender sender,
+            @NotNull    Command command,
+            @NotNull    String label,
+                        String[] args
+    ) {
         if (onlyConsole && sender instanceof Player)
         {
-            send.errorMessage(sender, (String) config.getValue(MessageEntries.NO_PLAYER));
+            send.errorMessage(sender, (String) config.getValue(DefaultEntries.NO_PLAYER));
             return false;
         }
 
         if (onlyPlayer && sender instanceof ConsoleCommandSender)
         {
-            send.errorMessage(sender, (String) config.getValue(MessageEntries.NO_CONSOLE));
+            send.errorMessage(sender, (String) config.getValue(DefaultEntries.NO_CONSOLE));
             return false;
         }
 
         if (permission != null && !sender.hasPermission(permission))
         {
-            send.errorMessage(sender, (String) config.getValue(MessageEntries.NO_PERMS));
+            send.errorMessage(sender, (String) config.getValue(DefaultEntries.NO_PERMS));
             return false;
         }
 
@@ -135,7 +144,7 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
     }
 
     /**
-     * Returns all the command arguments available that starts with the artgu
+     * Returns all the command arguments available that starts with the argument.
      * @param args Command arguments.
      * @return List of arguments.
      */
@@ -157,8 +166,12 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
-    {
+    public List<String> onTabComplete(
+            @NotNull    CommandSender sender,
+            @NotNull    Command command,
+            @NotNull    String alias,
+                        String[] args
+    ) {
         if (tabComplete && args.length == 1)
         {
             return  tabComplete(args)

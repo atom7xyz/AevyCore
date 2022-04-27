@@ -8,6 +8,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Creates a new custom configuration manager. [INCOMPLETE]
+ * @author Sorridi
+ */
+@Deprecated
 @Getter
 public class ConfigCustom extends Config
 {

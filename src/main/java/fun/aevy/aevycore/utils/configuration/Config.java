@@ -1,13 +1,16 @@
 package fun.aevy.aevycore.utils.configuration;
 
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 
+/**
+ * Creates a new configuration manager. An empty HashMap is automatically provided.
+ * @since 1.0
+ * @author Sorridi
+ */
 @Getter
 public class Config
 {

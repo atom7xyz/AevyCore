@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Creates new Managers. An empty List and HashMap are automatically provided.
+ * @since 1.0
+ * @author Sorridi
+ */
 @SuppressWarnings("unused")
 @Getter
 public abstract class ManagerBuilder<G, N>
@@ -16,7 +21,7 @@ public abstract class ManagerBuilder<G, N>
     protected final HashMap<G, N>   map;
 
     /**
-     * Constructor for new Builders.
+     * Constructor for new Managers.
      * @param aevyCore Instance of AevyCore.
      * @since 1.0
      */

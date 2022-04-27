@@ -7,6 +7,11 @@ import fun.aevy.aevycore.utils.strings.StringUtils;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * Creates and register new {@link Listener}s. Utility classes are automatically provided.
+ * @since 1.0
+ * @author Sorridi
+ */
 public abstract class ListenerBuilder implements Listener
 {
     protected final AevyCore        aevyCore;
@@ -17,6 +22,8 @@ public abstract class ListenerBuilder implements Listener
     /**
      * Constructor for new Listeners, which they get automatically registered.
      * @param javaPlugin Instance of the plugin
+     * @param aevyCore Instance of AevyCore
+     * @since 1.0
      */
     public ListenerBuilder(JavaPlugin javaPlugin, AevyCore aevyCore)
     {

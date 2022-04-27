@@ -2,6 +2,7 @@ package fun.aevy.aevycore.events;
 
 import fun.aevy.aevycore.AevyCore;
 import fun.aevy.aevycore.struct.elements.AevyPlayer;
+import fun.aevy.aevycore.struct.manager.PlayersManager;
 import fun.aevy.aevycore.utils.builders.ListenerBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * The player events for managing the list of online {@link AevyPlayer}s using
+ * {@link PlayersManager}
+ * @since 1.0
+ * @author Sorridi
+ */
 public class PlayerEvents extends ListenerBuilder
 {
     public PlayerEvents(JavaPlugin javaPlugin, AevyCore aevyCore)

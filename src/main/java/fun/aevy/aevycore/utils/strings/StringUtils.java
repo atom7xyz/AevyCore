@@ -2,10 +2,15 @@ package fun.aevy.aevycore.utils.strings;
 
 import fun.aevy.aevycore.AevyCore;
 import fun.aevy.aevycore.utils.configuration.Config;
-import fun.aevy.aevycore.utils.configuration.entries.MiscEntries;
+import fun.aevy.aevycore.utils.configuration.entries.DefaultEntries;
 import fun.aevy.aevycore.utils.formatting.MessageResult;
 import org.bukkit.ChatColor;
 
+/**
+ * Utility class used to format and color messages.
+ * @since 1.0
+ * @author Sorridi
+ */
 public class StringUtils
 {
     private final Config config;
@@ -27,7 +32,7 @@ public class StringUtils
      */
     public String formatMessage(String message, MessageResult messageResult)
     {
-        return color(config.getValue(MiscEntries.PREFIX) + stringFromResult(messageResult) + message);
+        return color(config.getValue(DefaultEntries.PREFIX) + stringFromResult(messageResult) + message);
     }
 
     /**
@@ -37,11 +42,9 @@ public class StringUtils
      */
     public String stringFromResult(MessageResult messageResult)
     {
-        return (String) (messageResult == MessageResult.SUCCESS ?
-                        config.getValue(MiscEntries.SUCCESS):
-                        messageResult == MessageResult.NORMAL ?
-                        config.getValue(MiscEntries.NORMAL) :
-                        config.getValue(MiscEntries.ERROR));
+        return (String) (messageResult == MessageResult.SUCCESS ? config.getValue(DefaultEntries.SUCCESS):
+                        messageResult == MessageResult.NORMAL   ? config.getValue(DefaultEntries.NORMAL) :
+                        config.getValue(DefaultEntries.ERROR));
     }
 
     /**
