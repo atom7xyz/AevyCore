@@ -3,6 +3,7 @@ package fun.aevy.aevycore.events;
 import fun.aevy.aevycore.AevyCore;
 import fun.aevy.aevycore.struct.elements.AevyPlayer;
 import fun.aevy.aevycore.struct.manager.PlayersManager;
+import fun.aevy.aevycore.utils.builders.Lambda;
 import fun.aevy.aevycore.utils.builders.ListenerBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The player events for managing the list of online {@link AevyPlayer}s using
@@ -19,6 +21,14 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class PlayerEvents extends ListenerBuilder
 {
+
+    /**
+     * Constructor for new Listeners, which they get automatically registered.
+     *
+     * @param javaPlugin Instance of the plugin
+     * @param aevyCore   Instance of AevyCore
+     * @since 1.0
+     */
     public PlayerEvents(JavaPlugin javaPlugin, AevyCore aevyCore)
     {
         super(javaPlugin, aevyCore);
@@ -28,14 +38,22 @@ public class PlayerEvents extends ListenerBuilder
     public void on(PlayerJoinEvent event)
     {
         Player player = event.getPlayer();
-        playersManager.addList(new AevyPlayer(player));
+        playersManager.addSet(new AevyPlayer(player));
     }
 
     @EventHandler (priority = EventPriority.LOWEST)
     public void on(PlayerQuitEvent event)
     {
-        Player player = event.getPlayer();
-        playersManager.removeList(playersManager.getFromList(player));
+        Player player           = event.getPlayer();
+        AevyPlayer aevyPlayer   = playersManager.getItem(new Lambda()
+        {
+            @Override
+            public <G> boolean expression(@NotNull G g) {
+                return ((AevyPlayer) g).getPlayer().equals(player);
+            }
+        });
+
+        playersManager.removeSet(aevyPlayer);
     }
 
 }
