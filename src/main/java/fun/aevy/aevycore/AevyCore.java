@@ -22,12 +22,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 @Getter
 public final class AevyCore extends JavaPlugin
 {
-    private String version, site;
-    private PluginManager pluginManager;
-    private PlayersManager playersManager;
-    private Config configuration;
-    private StringUtils stringUtils;
-    private Send send;
+    private String          version, site;
+
+    private PluginManager   pluginManager;
+    private PlayersManager  playersManager;
+
+    private Config          configuration;
+    private StringUtils     stringUtils;
+    private Send            send;
 
     @Override
     public void onEnable()

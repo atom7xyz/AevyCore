@@ -2,6 +2,7 @@ package fun.aevy.aevycore.utils.builders;
 
 import fun.aevy.aevycore.AevyCore;
 import lombok.Getter;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -17,18 +18,18 @@ import java.util.List;
 @Getter
 public abstract class ManagerBuilder<G, N>
 {
-    protected final AevyCore        aevyCore;
+    protected final JavaPlugin      javaPlugin;
     protected final HashSet<G>      set;
     protected final HashMap<G, N>   map;
 
     /**
      * Constructor for new Managers.
-     * @param aevyCore Instance of AevyCore.
+     * @param javaPlugin Instance of the plugin.
      * @since 1.0
      */
-    public ManagerBuilder(AevyCore aevyCore)
+    public ManagerBuilder(JavaPlugin javaPlugin)
     {
-        this.aevyCore   = aevyCore;
+        this.javaPlugin   = javaPlugin;
         this.set        = new HashSet<>();
         this.map        = new HashMap<>();
     }

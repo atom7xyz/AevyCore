@@ -6,6 +6,7 @@ import fun.aevy.aevycore.utils.builders.Lambda;
 import fun.aevy.aevycore.utils.builders.ManagerBuilder;
 import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Manages the {@link AevyPlayer}s.
@@ -18,12 +19,12 @@ public class PlayersManager extends ManagerBuilder<AevyPlayer, ObjectUtils.Null>
     /**
      * Constructor for new Managers.
      *
-     * @param aevyCore Instance of AevyCore.
+     * @param javaPlugin Instance of the plugin.
      * @since 1.0
      */
-    public PlayersManager(AevyCore aevyCore)
+    public PlayersManager(JavaPlugin javaPlugin)
     {
-        super(aevyCore);
+        super(javaPlugin);
     }
 
     /**
@@ -31,7 +32,7 @@ public class PlayersManager extends ManagerBuilder<AevyPlayer, ObjectUtils.Null>
      */
     public void addAllOnlinePlayers()
     {
-        aevyCore
+        javaPlugin
                 .getServer()
                 .getOnlinePlayers()
                 .forEach(player -> addSet(new AevyPlayer(player)));
