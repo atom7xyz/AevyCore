@@ -1,6 +1,5 @@
 package fun.aevy.aevycore.utils.builders;
 
-import fun.aevy.aevycore.AevyCore;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
