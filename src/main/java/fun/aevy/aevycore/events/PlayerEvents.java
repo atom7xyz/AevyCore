@@ -48,11 +48,11 @@ public class PlayerEvents extends ListenerBuilder
         AevyPlayer aevyPlayer   = playersManager.getItem(new Lambda()
         {
             @Override
-            public <G> boolean expression(@NotNull G g) {
+            public <G> boolean expression(@NotNull G g)
+            {
                 return ((AevyPlayer) g).getPlayer().equals(player);
             }
         });
-
         playersManager.removeSet(aevyPlayer);
     }
 
