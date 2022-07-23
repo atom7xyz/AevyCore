@@ -1,10 +1,10 @@
 package fun.aevy.aevycore.events;
 
-import fun.aevy.aevycore.AevyCore;
 import fun.aevy.aevycore.struct.elements.AevyPlayer;
 import fun.aevy.aevycore.struct.manager.PlayersManager;
 import fun.aevy.aevycore.utils.builders.Lambda;
 import fun.aevy.aevycore.utils.builders.ListenerBuilder;
+import fun.aevy.aevycore.utils.formatting.Send;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,13 +25,13 @@ public class PlayerEvents extends ListenerBuilder
     /**
      * Constructor for new Listeners, which they get automatically registered.
      *
-     * @param javaPlugin Instance of the plugin
-     * @param aevyCore   Instance of AevyCore
+     * @param javaPlugin    Instance of the plugin
+     * @param send          Instance of Send
      * @since 1.0
      */
-    public PlayerEvents(JavaPlugin javaPlugin, AevyCore aevyCore)
+    public PlayerEvents(JavaPlugin javaPlugin, Send send)
     {
-        super(javaPlugin, aevyCore);
+        super(javaPlugin, send);
     }
 
     @EventHandler (priority = EventPriority.MONITOR)

@@ -40,8 +40,8 @@ public class Scheduler
 
     /**
      * Sets task initial delay in ticks.
-     * @param initialDelay The delay.
-     * @return Instance of the Scheduler.
+     * @param initialDelay  The delay.
+     * @return              Instance of the Scheduler.
      */
     public Scheduler delay(long initialDelay)
     {
@@ -51,9 +51,9 @@ public class Scheduler
 
     /**
      * Sets task initial delay with the preferred {@link TimeUnit}.
-     * @param initialDelay The delay.
-     * @param timeUnit The unit of the delay.
-     * @return Instance of the Scheduler.
+     * @param initialDelay  The delay.
+     * @param timeUnit      The unit of the delay.
+     * @return              Instance of the Scheduler.
      */
     public Scheduler delay(long initialDelay, TimeUnit timeUnit)
     {
@@ -63,8 +63,8 @@ public class Scheduler
 
     /**
      * Sets task initial delay in ticks.
-     * @param repeatEvery The delay (must be > 0).
-     * @return Instance of the Scheduler.
+     * @param repeatEvery   The delay (must be > 0).
+     * @return              Instance of the Scheduler.
      */
     public Scheduler repeat(long repeatEvery)
     {
@@ -80,9 +80,9 @@ public class Scheduler
 
     /**
      * Sets task initial delay with the preferred {@link TimeUnit}.
-     * @param repeatEvery The delay (must be > 0).
-     * @param timeUnit The unit of the delay.
-     * @return Instance of the Scheduler.
+     * @param repeatEvery   The delay (must be > 0).
+     * @param timeUnit      The unit of the delay.
+     * @return              Instance of the Scheduler.
      */
     public Scheduler repeat(long repeatEvery, TimeUnit timeUnit)
     {
@@ -98,8 +98,8 @@ public class Scheduler
 
     /**
      * Sets the task to execute as async.
-     * @param async The value.
-     * @return Instance of the Scheduler.
+     * @param async     The value.
+     * @return          Instance of the Scheduler.
      */
     public Scheduler async(boolean async)
     {

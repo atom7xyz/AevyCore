@@ -3,7 +3,7 @@ version: '${project.version}'
 main: fun.aevy.aevycore.AevyCore
 authors: [ Sorridi, Niketion ]
 description: Core API plugin
-website: https://github.com/Sorridi/AevyCore
+website: https://www.sorridi.xyz
 api-version: 1.18
 commands:
   corereload:

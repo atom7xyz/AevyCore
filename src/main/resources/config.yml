@@ -3,18 +3,16 @@ permissions:
 
 messages:
   PREFIX: "&b AevyCore &7» "
-  SUCCESS: "&a"
-  ERROR: "&c"
-  NORMAL: "&f"
-  errors:
-    NO_PERMS: "You can't execute this command!"
-    NO_PLAYER: "You can't execute this command as a player!"
-    NO_CONSOLE: "You can't execute this command as the console!"
+  NO_PERMS: "&cYou can't execute this command!"
+  NO_PLAYER: "&cYou can't execute this command as a player!"
+  NO_CONSOLE: "&cYou can't execute this command as the console!"
 
 commands:
-  RELOAD_MESSAGE: "Configuration has been reloaded!"
+  RELOAD_MESSAGE: "&aConfiguration has been reloaded!"
+  VERSION_MESSAGE: "&f{version} - {site}"
 
 database:
+  ENABLED: false
   DRIVER: "org.mariadb.jdbc.Driver"
   URL: "mariadb"
   IP: "localhost"

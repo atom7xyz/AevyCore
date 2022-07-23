@@ -1,118 +1,54 @@
 package fun.aevy.aevycore.utils.formatting;
 
-import fun.aevy.aevycore.AevyCore;
-import fun.aevy.aevycore.utils.strings.StringUtils;
+import fun.aevy.aevycore.utils.configuration.Config;
+import fun.aevy.aevycore.utils.configuration.ConfigEntry;
+import lombok.AllArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-
-import java.util.List;
 
 /**
  * Utility class used to send formatted messages to {@link CommandSender}s.
- * @since 1.0
+ * @since 1.5
  * @author Sorridi
  */
+@AllArgsConstructor
 public class Send
 {
-    private final StringUtils stringUtils;
+    private Config config;
 
-    /**
-     * Constructor for Send.
-     * @param aevyCore Instance of AevyCore.
-     * @since 1.0
-     */
-    public Send(AevyCore aevyCore)
+    public void message(CommandSender sender, Enum<?> configEnum)
     {
-        stringUtils = aevyCore.getStringUtils();
+        ConfigEntry configEntry = config.get(configEnum);
+
+        if (configEntry.isText())
+        {
+            message(sender, configEntry.getMessageProperties());
+        }
     }
 
-    /**
-     * Sends the message to the commandSender.
-     * @param commandSender Target of the message.
-     * @param message       The message to be sent.
-     * @param messageResult Typology of the message.
-     * @since 1.0
-     */
-    public void message(CommandSender commandSender, String message, MessageResult messageResult)
+    public static void message(CommandSender sender, MessageProperties properties)
     {
-        commandSender.sendMessage(stringUtils.formatMessage(message, messageResult));
+        String prefix   = properties.getPrefix();
+        String message  = properties.getActualMessage();
+
+        if (prefix == null)
+        {
+            sender.sendMessage(message);
+        }
+        else
+        {
+            sender.sendMessage(prefix + message);
+        }
     }
 
-    /**
-     * Sends a list of messages to the commandSender.
-     * @param commandSender Target of the messages.
-     * @param messages      The messages to be sent.
-     * @param messageResult Typology of the messages.
-     * @since 1.0
-     */
-    public void message(CommandSender commandSender, List<String> messages, MessageResult messageResult)
+    public static void broadcast(MessageProperties properties, boolean consoleToo)
     {
-        messages.forEach(s -> message(commandSender, s, messageResult));
-    }
+        Bukkit.getOnlinePlayers().forEach(player -> message(player, properties));
 
-    /**
-     * Sends the message to the commandSender with {@link fun.aevy.aevycore.utils.formatting.MessageResult#NORMAL}.
-     * @param commandSender Target of the message.
-     * @param message       The message to be sent.
-     * @since 1.0
-     */
-    public void message(CommandSender commandSender, String message)
-    {
-        message(commandSender, message, MessageResult.NORMAL);
-    }
-
-    /**
-     * Sends the messages to the commandSender with {@link fun.aevy.aevycore.utils.formatting.MessageResult#NORMAL}.
-     * @param commandSender Target of the messages.
-     * @param messages      The messages to be sent.
-     * @since 1.0
-     */
-    public void message(CommandSender commandSender, List<String> messages)
-    {
-        messages.forEach(s -> message(commandSender, s));
-    }
-
-    /**
-     * Sends the message to the commandSender with {@link fun.aevy.aevycore.utils.formatting.MessageResult#ERROR}.
-     * @param commandSender Target of the message.
-     * @param message       The message to be sent.
-     * @since 1.0
-     */
-    public void errorMessage(CommandSender commandSender, String message)
-    {
-        message(commandSender, message, MessageResult.ERROR);
-    }
-
-    /**
-     * Sends the messages to the commandSender with {@link fun.aevy.aevycore.utils.formatting.MessageResult#ERROR}.
-     * @param commandSender Target of the messages.
-     * @param messages      The messages to be sent.
-     * @since 1.0
-     */
-    public void errorMessage(CommandSender commandSender, List<String> messages)
-    {
-        messages.forEach(s -> errorMessage(commandSender, s));
-    }
-
-    /**
-     * Sends the message to the commandSender with {@link fun.aevy.aevycore.utils.formatting.MessageResult#SUCCESS}.
-     * @param commandSender Target of the message.
-     * @param message       The message to be sent.
-     * @since 1.0
-     */
-    public void successMessage(CommandSender commandSender, String message)
-    {
-        message(commandSender, message, MessageResult.SUCCESS);
-    }
-
-    /**
-     * Sends the messages to the commandSender with {@link fun.aevy.aevycore.utils.formatting.MessageResult#SUCCESS}.
-     * @param commandSender Target of the messages.
-     * @param messages      The messages to be sent.
-     * @since 1.0
-     */
-    public void successMessage(CommandSender commandSender, List<String> messages)
-    {
-        messages.forEach(s -> successMessage(commandSender, s));
+        if (consoleToo)
+        {
+            System.out.println(properties.getPrefix() + properties.getActualMessage());
+        }
     }
 
 }

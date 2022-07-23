@@ -1,10 +1,9 @@
 package fun.aevy.aevycore.utils.builders;
 
 import fun.aevy.aevycore.AevyCore;
-import fun.aevy.aevycore.utils.configuration.Config;
-import fun.aevy.aevycore.utils.configuration.entries.DefaultEntries;
+import fun.aevy.aevycore.struct.elements.Reloadable;
+import fun.aevy.aevycore.utils.configuration.entries.GlobalEntries;
 import fun.aevy.aevycore.utils.formatting.Send;
-import fun.aevy.aevycore.utils.strings.StringUtils;
 import lombok.Getter;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unused")
 @Getter
-public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
+public abstract class CommandsBuilder extends Reloadable implements CommandExecutor, TabCompleter
 {
     private final boolean       onlyPlayer, onlyConsole, tabComplete;
     private final List<String>  usage;
@@ -34,13 +33,12 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
 
     protected final AevyCore    aevyCore;
     protected final Send        send;
-    protected final Config        config;
-    protected final StringUtils stringUtils;
 
     /**
      * Constructor for new Commands, which they get automatically registered.
-     * @param aevyCore      Instance of AevyCore.
+     *
      * @param plugin        The plugin that is using AevyCore as library.
+     * @param send          Instance of Send.
      * @param permission    Permission required to run the command.
      * @param command       The command itself.
      * @param onlyPlayer    Makes the command runnable only to players.
@@ -49,21 +47,20 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
      * @param tabComplete   Enables tab complete.
      */
     public CommandsBuilder(
-            @NotNull    AevyCore aevyCore,
-            @NotNull    JavaPlugin plugin,
-            @Nullable   String permission,
-            @NotNull    String command,
-                        boolean onlyPlayer,
-                        boolean onlyConsole,
-            @Nullable   List<String> usage,
-                        boolean tabComplete
+            @NotNull    JavaPlugin      plugin,
+            @NotNull    Send            send,
+            @Nullable   String          permission,
+            @NotNull    String          command,
+                        boolean         onlyPlayer,
+                        boolean         onlyConsole,
+            @Nullable   List<String>    usage,
+                        boolean         tabComplete
     ) {
-        this.aevyCore       = aevyCore;
-        this.plugin         = plugin;
-
-        this.send           = aevyCore.getSend();
+        this.aevyCore       = AevyCore.getInstance();
         this.config         = aevyCore.getConfiguration();
-        this.stringUtils    = aevyCore.getStringUtils();
+
+        this.plugin         = plugin;
+        this.send           = send;
 
         this.onlyPlayer     = onlyPlayer;
         this.onlyConsole    = onlyConsole;
@@ -90,19 +87,19 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
     ) {
         if (onlyConsole && sender instanceof Player)
         {
-            send.errorMessage(sender, (String) config.getValue(DefaultEntries.NO_PLAYER));
+            send.message(sender, GlobalEntries.NO_PLAYER);
             return false;
         }
 
         if (onlyPlayer && sender instanceof ConsoleCommandSender)
         {
-            send.errorMessage(sender, (String) config.getValue(DefaultEntries.NO_CONSOLE));
+            send.message(sender, GlobalEntries.NO_CONSOLE);
             return false;
         }
 
         if (permission != null && !sender.hasPermission(permission))
         {
-            send.errorMessage(sender, (String) config.getValue(DefaultEntries.NO_PERMS));
+            send.message(sender, GlobalEntries.NO_PERMS);
             return false;
         }
 
@@ -111,7 +108,8 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter
             if (usage == null)
                 return false;
 
-            send.message(sender, usage);
+            // TODO aggiungere usage configurabile da file
+            //Send.message(sender, usage);
             return false;
         }
 

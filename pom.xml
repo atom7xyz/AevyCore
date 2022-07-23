@@ -6,7 +6,7 @@
 
     <groupId>fun.aevy</groupId>
     <artifactId>AevyCore</artifactId>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>AevyCore</name>

@@ -9,5 +9,5 @@ import fun.aevy.aevycore.utils.configuration.Config;
  */
 public enum DatabaseEntries
 {
-    DRIVER, URL, IP, PORT, USER, PASSWORD, DATABASE, MAX_POOL_SIZE, DEBUG, PROPERTIES, USE_DEFAULTS
+    ENABLED, DRIVER, URL, IP, PORT, USER, PASSWORD, DATABASE, MAX_POOL_SIZE, DEBUG, PROPERTIES, USE_DEFAULTS
 }

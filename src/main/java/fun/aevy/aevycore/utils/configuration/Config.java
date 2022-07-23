@@ -1,5 +1,6 @@
 package fun.aevy.aevycore.utils.configuration;
 
+import fun.aevy.aevycore.utils.formatting.MessageProperties;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -80,8 +81,19 @@ public class Config
      */
     public void add(Enum<?> e, String path)
     {
-        String newPath = path + "." + e.name();
-        entries.put(e, new ConfigEntry(newPath, fileConfiguration.get(newPath)));
+        String prefix   = (String) fileConfiguration.get("messages.PREFIX");
+        String newPath  = path + "." + e.name();
+        Object value    = fileConfiguration.get(newPath);
+
+        if (value instanceof String)
+        {
+            MessageProperties properties = new MessageProperties((String) value, prefix);
+            entries.put(e, new ConfigEntry(newPath, value, properties, true));
+        }
+        else
+        {
+            entries.put(e, new ConfigEntry(newPath, value, null, false));
+        }
     }
 
     /**
@@ -143,12 +155,22 @@ public class Config
     {
         HashMap<Enum<?>, ConfigEntry> temp = new HashMap<>(entries);
 
+        String prefix = (String) fileConfiguration.get("messages.PREFIX");
+
         temp.forEach((anEnum, configEntry) ->
         {
             String path     = configEntry.getPath();
             Object value    = fileConfiguration.get(path);
 
-            replace(anEnum, new ConfigEntry(path, value));
+            if (value instanceof String)
+            {
+                MessageProperties properties = new MessageProperties((String) value, prefix);
+                replace(anEnum, new ConfigEntry(path, value, properties, true));
+            }
+            else
+            {
+                replace(anEnum, new ConfigEntry(path, value, null, false));
+            }
         });
     }
 

@@ -1,4 +1,4 @@
-package fun.aevy.aevycore.utils.formatting;
+package fun.aevy.aevycore.struct.elements.database;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
