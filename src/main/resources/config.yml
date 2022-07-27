@@ -9,7 +9,7 @@ messages:
 
 commands:
   RELOAD_MESSAGE: "&aConfiguration has been reloaded!"
-  VERSION_MESSAGE: "&f{version} - {site}"
+  VERSION_MESSAGE: "&fv{version} // {site}"
 
 database:
   ENABLED: false

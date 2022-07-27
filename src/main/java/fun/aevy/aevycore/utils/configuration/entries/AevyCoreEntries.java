@@ -1,9 +1,9 @@
 package fun.aevy.aevycore.utils.configuration.entries;
 
-import fun.aevy.aevycore.utils.configuration.Config;
+import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 
 /**
- * AevyCore's {@link Config} entries.
+ * AevyCore's {@link CoolConfig} entries.
  * @since 1.5
  * @author Sorridi
  */

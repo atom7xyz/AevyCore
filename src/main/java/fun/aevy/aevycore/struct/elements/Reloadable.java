@@ -1,10 +1,11 @@
 package fun.aevy.aevycore.struct.elements;
 
-import fun.aevy.aevycore.utils.configuration.Config;
-
-public abstract class Reloadable
+/**
+ * Interface for reloading variables.
+ * @since 1.6
+ * @author Sorridi
+ */
+public interface Reloadable
 {
-    protected Config config;
-
-    public abstract void reload();
+    void reloadVars();
 }

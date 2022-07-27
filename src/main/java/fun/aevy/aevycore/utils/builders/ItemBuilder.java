@@ -314,7 +314,7 @@ public class ItemBuilder
     @Deprecated
     public ItemBuilder setWoolColor(DyeColor color)
     {
-        if (!is.getType().equals(Material.WHITE_WOOL))
+        if (!is.getType().equals(Material.WOOL))
             return this;
 
         is.setDurability(color.getDyeData());

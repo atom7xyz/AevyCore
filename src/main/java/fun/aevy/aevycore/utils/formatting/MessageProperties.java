@@ -3,12 +3,14 @@ package fun.aevy.aevycore.utils.formatting;
 import fun.aevy.aevycore.utils.Shortcuts;
 import lombok.Getter;
 
-@Getter
 public class MessageProperties
 {
-    private final String    primitiveMessage;
-    private String          actualMessage;
-    private String          prefix;
+    @Getter
+    private final String primitiveMessage;
+    @Getter
+    private String prefix, actualMessage;
+    @Getter
+    private boolean prefixed;
 
     public MessageProperties(String primitiveMessage)
     {
@@ -19,8 +21,9 @@ public class MessageProperties
     public MessageProperties(String primitiveMessage, String prefix)
     {
         this.primitiveMessage   = primitiveMessage;
-        this.actualMessage      = Shortcuts.color(primitiveMessage);
-        this.prefix             = Shortcuts.color(prefix);
+        this.actualMessage      = primitiveMessage;
+        this.prefix             = prefix;
+        this.prefixed           = true;
     }
 
     public MessageProperties replace(String[] toReplace, String[] replacements)
@@ -31,7 +34,7 @@ public class MessageProperties
         {
             temp = temp.replace(toReplace[i], replacements[i]);
         }
-        actualMessage = Shortcuts.color(temp);
+        actualMessage = temp;
 
         return this;
     }
@@ -39,13 +42,24 @@ public class MessageProperties
     public MessageProperties withPrefix(String prefix)
     {
         this.prefix = Shortcuts.color(prefix);
+        prefixed    = true;
+
         return this;
     }
 
     public MessageProperties noPrefix()
     {
-        this.prefix = null;
+        prefixed = false;
         return this;
+    }
+
+    public String getMessage()
+    {
+        if (prefixed)
+        {
+            return Shortcuts.color(prefix + actualMessage);
+        }
+        return Shortcuts.color(actualMessage);
     }
 
 }

@@ -2,7 +2,7 @@ package fun.aevy.aevycore.struct.elements.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import fun.aevy.aevycore.utils.configuration.Config;
+import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 import fun.aevy.aevycore.utils.configuration.entries.DatabaseEntries;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -51,20 +51,20 @@ public class DatabaseConnection
         initialize();
     }
 
-    public DatabaseConnection(Config config)
+    public DatabaseConnection(CoolConfig coolConfig)
     {
-        this.ip             = (String) config.getValue(DatabaseEntries.IP);
-        this.port           = (String) config.getValue(DatabaseEntries.PORT);
-        this.database       = (String) config.getValue(DatabaseEntries.DATABASE);
-        this.user           = (String) config.getValue(DatabaseEntries.USER);
-        this.password       = (String) config.getValue(DatabaseEntries.PASSWORD);
-        this.url            = (String) config.getValue(DatabaseEntries.URL);
-        this.driver         = (String) config.getValue(DatabaseEntries.DRIVER);
+        this.ip             = (String) coolConfig.getValue(DatabaseEntries.IP);
+        this.port           = (String) coolConfig.getValue(DatabaseEntries.PORT);
+        this.database       = (String) coolConfig.getValue(DatabaseEntries.DATABASE);
+        this.user           = (String) coolConfig.getValue(DatabaseEntries.USER);
+        this.password       = (String) coolConfig.getValue(DatabaseEntries.PASSWORD);
+        this.url            = (String) coolConfig.getValue(DatabaseEntries.URL);
+        this.driver         = (String) coolConfig.getValue(DatabaseEntries.DRIVER);
         this.properties     = new HashMap<>();
-        this.useDefaults    = (boolean) config.getValue(DatabaseEntries.USE_DEFAULTS);
-        this.poolSize       = (int) config.getValue(DatabaseEntries.MAX_POOL_SIZE);
+        this.useDefaults    = (boolean) coolConfig.getValue(DatabaseEntries.USE_DEFAULTS);
+        this.poolSize       = (int) coolConfig.getValue(DatabaseEntries.MAX_POOL_SIZE);
 
-        List<String> list = (List<String>) config.getValue(DatabaseEntries.PROPERTIES);
+        List<String> list = (List<String>) coolConfig.getValue(DatabaseEntries.PROPERTIES);
 
         for (String s : list)
         {

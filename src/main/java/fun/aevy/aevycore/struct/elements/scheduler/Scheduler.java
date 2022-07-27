@@ -114,15 +114,15 @@ public class Scheduler
     public void runTask(@NotNull Runnable runnable)
     {
         if (async)
-            if (repeatEvery == 0)
-                bukkitTask = bukkitScheduler.runTaskTimerAsynchronously(javaPlugin, runnable, initialDelay, repeatEvery);
-            else
+            if (repeatable)
                 bukkitTask = bukkitScheduler.runTaskLaterAsynchronously(javaPlugin, runnable, initialDelay);
-        else
-            if (repeatEvery == 0)
-                bukkitTask = bukkitScheduler.runTaskTimer(javaPlugin, runnable, initialDelay, repeatEvery);
             else
+                bukkitTask = bukkitScheduler.runTaskTimerAsynchronously(javaPlugin, runnable, initialDelay, repeatEvery);
+        else
+            if (repeatable)
                 bukkitTask = bukkitScheduler.runTaskLater(javaPlugin, runnable, initialDelay);
+            else
+                bukkitTask = bukkitScheduler.runTaskTimer(javaPlugin, runnable, initialDelay, repeatEvery);
     }
 
     /**

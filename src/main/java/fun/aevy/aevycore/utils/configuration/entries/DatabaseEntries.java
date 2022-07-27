@@ -1,9 +1,9 @@
 package fun.aevy.aevycore.utils.configuration.entries;
 
-import fun.aevy.aevycore.utils.configuration.Config;
+import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 
 /**
- * Database {@link Config} entries.
+ * Database {@link CoolConfig} entries.
  * @since 1.4
  * @author Sorridi
  */

@@ -2,13 +2,11 @@ package fun.aevy.aevycore;
 
 import fun.aevy.aevycore.commands.ReloadCommand;
 import fun.aevy.aevycore.commands.VersionCommand;
-import fun.aevy.aevycore.events.PlayerEvents;
 import fun.aevy.aevycore.struct.elements.database.Database;
 import fun.aevy.aevycore.struct.elements.database.DatabaseConnection;
 import fun.aevy.aevycore.struct.manager.DatabasesManager;
-import fun.aevy.aevycore.struct.manager.PlayersManager;
-import fun.aevy.aevycore.utils.configuration.Config;
-import fun.aevy.aevycore.utils.configuration.ConfigType;
+import fun.aevy.aevycore.utils.configuration.elements.ConfigType;
+import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 import fun.aevy.aevycore.utils.configuration.entries.AevyCoreEntries;
 import fun.aevy.aevycore.utils.configuration.entries.DatabaseEntries;
 import fun.aevy.aevycore.utils.configuration.entries.GlobalEntries;
@@ -30,15 +28,13 @@ public final class AevyCore extends JavaPlugin
 
     private String version, site;
 
-    private PluginManager   pluginManager;
-    private PlayersManager  playersManager;
-
-    private Config configuration;
+    private PluginManager pluginManager;
 
     private DatabasesManager    databasesManager;
     private Database            database;
     private boolean             databaseEnabled;
 
+    private CoolConfig coolConfig;
     private Send send;
 
     private ReloadCommand   reloadCommand;
@@ -51,47 +47,47 @@ public final class AevyCore extends JavaPlugin
         aevyCore = this;
 
         /* Loads the configuration. */
-        configuration   = new Config(this, ConfigType.DEFAULT);
-        send            = new Send(configuration);
+        coolConfig = new CoolConfig(this, ConfigType.DEFAULT);
+        send       = new Send(coolConfig);
 
         String support = "messages";
 
-        configuration.add(GlobalEntries.PREFIX,        support);
-        configuration.add(GlobalEntries.NO_PERMS,      support);
-        configuration.add(GlobalEntries.NO_PLAYER,     support);
-        configuration.add(GlobalEntries.NO_CONSOLE,    support);
+        coolConfig.add(GlobalEntries.PREFIX,        support);
+        coolConfig.add(GlobalEntries.NO_PERMS,      support);
+        coolConfig.add(GlobalEntries.NO_PLAYER,     support);
+        coolConfig.add(GlobalEntries.NO_CONSOLE,    support);
 
         support = "permissions";
 
-        configuration.add(AevyCoreEntries.RELOAD_PERM, support);
+        coolConfig.add(AevyCoreEntries.RELOAD_PERM, support);
 
         support = "commands";
 
-        configuration.add(AevyCoreEntries.RELOAD_MESSAGE,   support);
-        configuration.add(AevyCoreEntries.VERSION_MESSAGE,  support);
+        coolConfig.add(AevyCoreEntries.RELOAD_MESSAGE,   support);
+        coolConfig.add(AevyCoreEntries.VERSION_MESSAGE,  support);
 
         support = "database";
 
         // DRIVER, URL, IP, PORT, USER, PASSWORD, DATABASE, MAX_POOL_SIZE, DEBUG
-        configuration.add(DatabaseEntries.ENABLED,          support);
+        coolConfig.add(DatabaseEntries.ENABLED,          support);
 
-        databaseEnabled = (Boolean) configuration.get(DatabaseEntries.ENABLED).getValue();
+        databaseEnabled = (Boolean) coolConfig.get(DatabaseEntries.ENABLED).getValue();
 
         if (databaseEnabled)
         {
-            configuration.add(DatabaseEntries.DRIVER,           support);
-            configuration.add(DatabaseEntries.URL,              support);
-            configuration.add(DatabaseEntries.IP,               support);
-            configuration.add(DatabaseEntries.PORT,             support);
-            configuration.add(DatabaseEntries.USER,             support);
-            configuration.add(DatabaseEntries.PASSWORD,         support);
-            configuration.add(DatabaseEntries.MAX_POOL_SIZE,    support);
-            configuration.add(DatabaseEntries.DEBUG,            support);
+            coolConfig.add(DatabaseEntries.DRIVER,           support);
+            coolConfig.add(DatabaseEntries.URL,              support);
+            coolConfig.add(DatabaseEntries.IP,               support);
+            coolConfig.add(DatabaseEntries.PORT,             support);
+            coolConfig.add(DatabaseEntries.USER,             support);
+            coolConfig.add(DatabaseEntries.PASSWORD,         support);
+            coolConfig.add(DatabaseEntries.MAX_POOL_SIZE,    support);
+            coolConfig.add(DatabaseEntries.DEBUG,            support);
 
             databasesManager = new DatabasesManager(this);
 
-            DatabaseConnection databaseConnection = new DatabaseConnection(configuration);
-            databasesManager.addConnection("aevycore", databaseConnection);
+            DatabaseConnection databaseConnection = new DatabaseConnection(coolConfig);
+            databasesManager.addConnection("AevyCore", databaseConnection);
 
             database = new Database(this, databasesManager, databaseConnection);
         }
@@ -101,36 +97,12 @@ public final class AevyCore extends JavaPlugin
         version = descriptionFile.getVersion();
         site    = descriptionFile.getWebsite();
 
-        pluginManager   = getServer().getPluginManager();
-        playersManager  = new PlayersManager(this);
+        pluginManager = getServer().getPluginManager();
 
-        playersManager.addAllOnlinePlayers();
+        String reloadPerm = (String) coolConfig.getValue(AevyCoreEntries.RELOAD_PERM);
 
-        /* Creates the /corereload command */
-        reloadCommand = new ReloadCommand(
-                this,
-                send,
-                (String) configuration.getValue(AevyCoreEntries.RELOAD_PERM),
-                "corereload",
-                false,
-                false,
-                null,
-                false
-        );
-        /* Creates the /coreversion command */
-        versionCommand = new VersionCommand(
-                this,
-                send,
-                null,
-                "coreversion",
-                false,
-                false,
-                null,
-                false
-        );
-
-        /* Creates a listener for Player's events. */
-        new PlayerEvents(this, send);
+        reloadCommand = new ReloadCommand(this, reloadPerm, "aevyreload");
+        versionCommand = new VersionCommand(this, null, "aevyversion");
     }
 
     @Override
@@ -139,7 +111,7 @@ public final class AevyCore extends JavaPlugin
         // Plugin shutdown logic
 
         /* Saves the configuration. */
-        configuration.save();
+        coolConfig.save();
 
         if (databaseEnabled)
         {
@@ -148,6 +120,10 @@ public final class AevyCore extends JavaPlugin
         }
     }
 
+    /**
+     * Gets the AevyCore instance.
+     * @return The instance.
+     */
     public static AevyCore getInstance()
     {
         return aevyCore;

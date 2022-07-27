@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 @SuppressWarnings("unused")
 public class DatabasesManager
 {
-    private final Logger    logger;
+    private final Logger logger;
 
     private final HashMap<String, DatabaseConnection>   databaseConnections;
     private final Collection<Database>                  databases;

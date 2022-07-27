@@ -1,7 +1,7 @@
-package fun.aevy.aevycore.utils.configuration;
+package fun.aevy.aevycore.utils.configuration.elements;
 
 /**
- * The {@link Config} type.
+ * The {@link CoolConfig} type.
  * @since 1.0
  * @author Sorridi
  */

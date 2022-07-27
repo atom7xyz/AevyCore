@@ -1,10 +1,12 @@
-package fun.aevy.aevycore.utils.configuration;
+package fun.aevy.aevycore.utils.configuration.elements;
 
 import fun.aevy.aevycore.utils.formatting.MessageProperties;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -13,7 +15,7 @@ import java.util.HashMap;
  * @author Sorridi
  */
 @Getter
-public class Config
+public class CoolConfig
 {
     protected final JavaPlugin  javaPlugin;
     protected FileConfiguration fileConfiguration;
@@ -21,12 +23,12 @@ public class Config
     protected final HashMap<Enum<?>, ConfigEntry> entries;
 
     /**
-     * Creates a new empty config.
+     * Creates a new empty coolConfig.
      * @param javaPlugin Instance of the plugin.
-     * @param configType The type of the config.
+     * @param configType The type of the coolConfig.
      * @since 1.0
      */
-    public Config(JavaPlugin javaPlugin, ConfigType configType)
+    public CoolConfig(JavaPlugin javaPlugin, ConfigType configType)
     {
         this.javaPlugin     = javaPlugin;
         entries             = new HashMap<>();
@@ -36,6 +38,12 @@ public class Config
         {
             create();
             fileConfiguration = javaPlugin.getConfig();
+
+            if (fileConfiguration == null)
+            {
+                File file = new File(javaPlugin.getDataFolder(), "config.yml");
+                fileConfiguration = YamlConfiguration.loadConfiguration(file);
+            }
         }
     }
 
@@ -148,7 +156,7 @@ public class Config
     }
 
     /**
-     * Updates the values of the in RAM config's entries.
+     * Updates the values of the in RAM coolConfig's entries.
      * @since 1.1
      */
     public void loadData()
@@ -172,6 +180,16 @@ public class Config
                 replace(anEnum, new ConfigEntry(path, value, null, false));
             }
         });
+    }
+
+    /**
+     * Sets a value in the plugin's configuration.
+     * @param path      The path to the section to replace.
+     * @param object    The object to set in the section.
+     */
+    public void setSpigotConfig(String path, Object object)
+    {
+        fileConfiguration.set(path, object);
     }
 
 }

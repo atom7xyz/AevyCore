@@ -1,4 +1,4 @@
-package fun.aevy.aevycore.utils.configuration;
+package fun.aevy.aevycore.utils.configuration.elements;
 
 import fun.aevy.aevycore.utils.formatting.MessageProperties;
 import lombok.AllArgsConstructor;
