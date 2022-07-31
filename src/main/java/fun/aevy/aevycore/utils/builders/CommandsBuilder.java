@@ -4,19 +4,16 @@ import fun.aevy.aevycore.AevyCore;
 import fun.aevy.aevycore.struct.elements.AevyDependent;
 import fun.aevy.aevycore.struct.elements.Reloadable;
 import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
-import fun.aevy.aevycore.utils.configuration.entries.GlobalEntries;
+import fun.aevy.aevycore.utils.configuration.entries.Aevy;
+import fun.aevy.aevycore.utils.formatting.MessageProperties;
 import fun.aevy.aevycore.utils.formatting.Send;
 import lombok.Getter;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,9 +25,10 @@ import java.util.stream.Collectors;
 @Getter
 public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, Reloadable
 {
-    private final boolean       onlyPlayer, onlyConsole, tabComplete;
-    private final List<String>  usage;
+    private boolean             onlyPlayer, onlyConsole, tabComplete;
     private String              permission;
+    private final String        command;
+    private MessageProperties   usage;
 
     protected final AevyDependent aevyDependent;
 
@@ -43,21 +41,11 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
      * Constructor for new Commands, which they get automatically registered.
      *
      * @param aevyDependent The AevyDependent instance.
-     * @param permission    Permission required to run the command.
      * @param command       The command itself.
-     * @param onlyPlayer    Makes the command runnable only to players.
-     * @param onlyConsole   Makes the command runnable only to the console.
-     * @param usage         How the command should be run.
-     * @param tabComplete   Enables tab complete.
      */
     public CommandsBuilder(
             @NotNull    AevyDependent   aevyDependent,
-            @Nullable   String          permission,
-            @NotNull    String          command,
-                        boolean         onlyPlayer,
-                        boolean         onlyConsole,
-            @Nullable   List<String>    usage,
-                        boolean         tabComplete
+            @NotNull    String          command
     ) {
         this.aevyDependent = aevyDependent;
 
@@ -66,16 +54,12 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         this.send       = aevyDependent.getSend();
         this.plugin     = aevyDependent.getCurrentPlugin();
 
-        this.onlyPlayer     = onlyPlayer;
-        this.onlyConsole    = onlyConsole;
-        this.usage          = usage;
-        this.tabComplete    = tabComplete;
-
-        if (permission != null)
-            this.permission = permission;
-
-        plugin.getCommand(command).setExecutor(this);
-        plugin.getCommand(command).setTabCompleter(this);
+        this.command        = command;
+        this.onlyPlayer     = false;
+        this.onlyConsole    = false;
+        this.usage          = null;
+        this.tabComplete    = false;
+        this.permission     = null;
 
         reloadVars();
     }
@@ -83,54 +67,11 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
     /**
      * Constructor for new Commands, which they get automatically registered.
      *
-     * @param aevyCore      The AevyCore instance.
-     * @param permission    Permission required to run the command.
-     * @param command       The command itself.
-     * @param onlyPlayer    Makes the command runnable only to players.
-     * @param onlyConsole   Makes the command runnable only to the console.
-     * @param usage         How the command should be run.
-     * @param tabComplete   Enables tab complete.
-     */
-    public CommandsBuilder(
-            @NotNull    AevyCore        aevyCore,
-            @Nullable   String          permission,
-            @NotNull    String          command,
-                        boolean         onlyPlayer,
-                        boolean         onlyConsole,
-            @Nullable   List<String>    usage,
-                        boolean         tabComplete
-    ) {
-        this.aevyDependent = null;
-
-        this.aevyCore   = aevyCore;
-        this.coolConfig = aevyCore.getCoolConfig();
-        this.send       = aevyCore.getSend();
-        this.plugin     = aevyCore;
-
-        this.onlyPlayer     = onlyPlayer;
-        this.onlyConsole    = onlyConsole;
-        this.usage          = usage;
-        this.tabComplete    = tabComplete;
-
-        if (permission != null)
-            this.permission = permission;
-
-        plugin.getCommand(command).setExecutor(this);
-        plugin.getCommand(command).setTabCompleter(this);
-
-        reloadVars();
-    }
-
-    /**
-     * Constructor for new Commands, which they get automatically registered.
-     *
-     * @param aevyCore      The AevyCore instance.
-     * @param permission    Permission required to run the command.
-     * @param command       The command itself.
+     * @param aevyCore  The AevyDependent instance.
+     * @param command   The command itself.
      */
     public CommandsBuilder(
             @NotNull    AevyCore    aevyCore,
-            @Nullable   String      permission,
             @NotNull    String      command
     ) {
         this.aevyDependent = null;
@@ -140,74 +81,12 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         this.send       = aevyCore.getSend();
         this.plugin     = aevyCore;
 
+        this.command        = command;
         this.onlyPlayer     = false;
         this.onlyConsole    = false;
         this.usage          = null;
-        this.tabComplete    = true;
-        this.permission     = permission;
-
-        plugin.getCommand(command).setExecutor(this);
-        plugin.getCommand(command).setTabCompleter(this);
-
-        reloadVars();
-    }
-
-    /**
-     * Constructor for new Commands, which they get automatically registered.
-     *
-     * @param aevyDependent The AevyDependent instance.
-     * @param permission    Permission required to run the command.
-     * @param command       The command itself.
-     */
-    public CommandsBuilder(
-            @NotNull    AevyDependent   aevyDependent,
-            @Nullable   String          permission,
-            @NotNull    String          command
-    ) {
-        this.aevyDependent = aevyDependent;
-
-        this.aevyCore   = aevyDependent.getAevyCore();
-        this.coolConfig = aevyDependent.getAevyConfig();
-        this.send       = aevyDependent.getSend();
-        this.plugin     = aevyDependent.getCurrentPlugin();
-
-        this.onlyPlayer     = false;
-        this.onlyConsole    = false;
-        this.usage          = null;
-        this.tabComplete    = true;
-        this.permission     = permission;
-
-        plugin.getCommand(command).setExecutor(this);
-        plugin.getCommand(command).setTabCompleter(this);
-
-        reloadVars();
-    }
-
-    /**
-     * Constructor for new Commands, which they get automatically registered.
-     *
-     * @param aevyDependent The AevyDependent instance.
-     * @param command       The command itself.
-     */
-    public CommandsBuilder(
-            @NotNull    AevyDependent   aevyDependent,
-            @NotNull    String          command
-    ) {
-        this.aevyDependent = aevyDependent;
-
-        this.aevyCore   = aevyDependent.getAevyCore();
-        this.coolConfig = aevyDependent.getAevyConfig();
-        this.send       = aevyDependent.getSend();
-        this.plugin     = aevyDependent.getCurrentPlugin();
-
-        this.onlyPlayer     = false;
-        this.onlyConsole    = false;
-        this.usage          = null;
-        this.tabComplete    = true;
+        this.tabComplete    = false;
         this.permission     = null;
-
-        plugin.getCommand(command).setExecutor(this);
-        plugin.getCommand(command).setTabCompleter(this);
 
         reloadVars();
     }
@@ -225,19 +104,19 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
     ) {
         if (onlyConsole && sender instanceof Player)
         {
-            send.message(sender, GlobalEntries.NO_PLAYER);
+            send.message(sender, Aevy.Messages.NO_PLAYER);
             return false;
         }
 
         if (onlyPlayer && sender instanceof ConsoleCommandSender)
         {
-            send.message(sender, GlobalEntries.NO_CONSOLE);
+            send.message(sender, Aevy.Messages.NO_CONSOLE);
             return false;
         }
 
         if (permission != null && !sender.hasPermission(permission))
         {
-            send.message(sender, GlobalEntries.NO_PERMS);
+            send.message(sender, Aevy.Messages.NO_PERMS);
             return false;
         }
 
@@ -246,8 +125,7 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
             if (usage == null)
                 return false;
 
-            // TODO aggiungere usage configurabile da file
-            //Send.message(sender, usage);
+            Send.message(sender, usage);
             return false;
         }
 
@@ -308,15 +186,85 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
             @NotNull    String alias,
                         String[] args
     ) {
-        if (tabComplete && args.length == 1)
+        int length = args.length;
+
+        if (length >= 1)
         {
-            return  tabComplete(args)
+            List<String> tabCompleted = tabComplete(args);
+
+            if (tabCompleted == null)
+            {
+                return Collections.emptyList();
+            }
+
+            return  tabCompleted
                     .stream()
-                    .filter(a -> a.startsWith(args[0]))
+                    .filter(arg -> arg.startsWith(args[length - 1]))
                     .collect(Collectors.toList());
         }
 
         return getDefaultTabList(args);
+    }
+
+    public CommandsBuilder setOnlyPlayers(boolean value)
+    {
+        onlyPlayer = value;
+        return this;
+    }
+
+    public CommandsBuilder setOnlyConsole(boolean value)
+    {
+        onlyConsole = value;
+        return this;
+    }
+
+    public CommandsBuilder setTabComplete(boolean value)
+    {
+        tabComplete = value;
+        return this;
+    }
+
+    public CommandsBuilder setUsage(List<String> usage)
+    {
+        this.usage = new MessageProperties(usage);
+        return this;
+    }
+
+    public CommandsBuilder setUsage(Enum<?> e)
+    {
+        this.usage = coolConfig.get(e).getMessageProperties();
+        return this;
+    }
+
+    public CommandsBuilder setPermission(String message)
+    {
+        this.permission = message;
+        return this;
+    }
+
+    public CommandsBuilder setPermission(Enum<?> e)
+    {
+        this.permission = (String) coolConfig.get(e).getValue();
+        return this;
+    }
+
+    public void build()
+    {
+        plugin.getCommand(command).setExecutor(this);
+
+        if (tabComplete)
+        {
+            plugin.getCommand(command).setTabCompleter(this);
+        }
+
+        if (aevyDependent == null)
+        {
+            aevyCore.getCanReload().add(this);
+        }
+        else
+        {
+            aevyDependent.addReloadable(this);
+        }
     }
 
 }

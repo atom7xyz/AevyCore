@@ -7,7 +7,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Creates a new configuration manager. An empty HashMap is automatically provided.
@@ -20,7 +22,7 @@ public class CoolConfig
     protected final JavaPlugin  javaPlugin;
     protected FileConfiguration fileConfiguration;
 
-    protected final HashMap<Enum<?>, ConfigEntry> entries;
+    protected HashMap<Enum<?>, ConfigEntry> entries;
 
     /**
      * Creates a new empty coolConfig.
@@ -41,8 +43,8 @@ public class CoolConfig
 
             if (fileConfiguration == null)
             {
-                File file = new File(javaPlugin.getDataFolder(), "config.yml");
-                fileConfiguration = YamlConfiguration.loadConfiguration(file);
+                File file           = new File(javaPlugin.getDataFolder(), "config.yml");
+                fileConfiguration   = YamlConfiguration.loadConfiguration(file);
             }
         }
     }
@@ -89,19 +91,62 @@ public class CoolConfig
      */
     public void add(Enum<?> e, String path)
     {
-        String prefix   = (String) fileConfiguration.get("messages.PREFIX");
+        String prefix   = getCurrentPrefix();
         String newPath  = path + "." + e.name();
         Object value    = fileConfiguration.get(newPath);
 
+        boolean entryWithPrefix         = entryHasPrefix(value);
+        MessageProperties properties    = null;
+        ConfigEntry newEntry;
+
         if (value instanceof String)
         {
-            MessageProperties properties = new MessageProperties((String) value, prefix);
-            entries.put(e, new ConfigEntry(newPath, value, properties, true));
+            properties  = new MessageProperties((String) value);
+            newEntry    = new ConfigEntry(path, value, properties, true);
+        }
+        else if (value instanceof ArrayList)
+        {
+            properties  = new MessageProperties((List<String>) value);
+            newEntry    = new ConfigEntry(path, value, properties, true);
         }
         else
         {
-            entries.put(e, new ConfigEntry(newPath, value, null, false));
+            newEntry = new ConfigEntry(path, value, null, false);
         }
+
+        if (properties != null)
+        {
+            if (entryWithPrefix)
+            {
+                properties.withPrefix(prefix);
+            }
+            else
+            {
+                properties.noPrefix();
+            }
+        }
+
+        entries.put(e, newEntry);
+    }
+
+    private boolean entryHasPrefix(Object object)
+    {
+         String prefix = "{prefix}";
+
+         if (object instanceof String)
+         {
+             return ((String) object).startsWith(prefix);
+         }
+         else if (object instanceof ArrayList)
+         {
+             return ((ArrayList<?>) object).stream().anyMatch(o -> ((String) o).startsWith(prefix));
+         }
+         return false;
+    }
+
+    private String getCurrentPrefix()
+    {
+        return fileConfiguration.getString("messages.PREFIX");
     }
 
     /**
@@ -161,25 +206,51 @@ public class CoolConfig
      */
     public void loadData()
     {
-        HashMap<Enum<?>, ConfigEntry> temp = new HashMap<>(entries);
+        HashMap<Enum<?>, ConfigEntry> temp = new HashMap<>();
 
-        String prefix = (String) fileConfiguration.get("messages.PREFIX");
+        String prefix = getCurrentPrefix();
 
-        temp.forEach((anEnum, configEntry) ->
+        entries.forEach((e, configEntry) ->
         {
-            String path     = configEntry.getPath();
-            Object value    = fileConfiguration.get(path);
+            String path     = getPath(e);
+            Object value    = fileConfiguration.get(path + "." + e);
+
+            boolean entryWithPrefix         = entryHasPrefix(value);
+            MessageProperties properties    = null;
+
+            ConfigEntry newEntry;
 
             if (value instanceof String)
             {
-                MessageProperties properties = new MessageProperties((String) value, prefix);
-                replace(anEnum, new ConfigEntry(path, value, properties, true));
+                properties  = new MessageProperties((String) value);
+                newEntry    = new ConfigEntry(path, value, properties, true);
+            }
+            else if (value instanceof ArrayList)
+            {
+                properties  = new MessageProperties((List<String>) value);
+                newEntry    = new ConfigEntry(path, value, properties, true);
             }
             else
             {
-                replace(anEnum, new ConfigEntry(path, value, null, false));
+                newEntry = new ConfigEntry(path, value, null, false);
             }
+
+            if (properties != null)
+            {
+                if (entryWithPrefix)
+                {
+                    properties.withPrefix(prefix);
+                }
+                else
+                {
+                    properties.noPrefix();
+                }
+            }
+
+            temp.put(e, newEntry);
         });
+
+        entries = temp;
     }
 
     /**
@@ -190,6 +261,11 @@ public class CoolConfig
     public void setSpigotConfig(String path, Object object)
     {
         fileConfiguration.set(path, object);
+    }
+
+    public MessageProperties getProperties(Enum<?> e)
+    {
+        return get(e).getMessageProperties();
     }
 
 }

@@ -7,6 +7,8 @@ import fun.aevy.aevycore.utils.formatting.Send;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -23,6 +25,8 @@ public abstract class AevyDependent extends JavaPlugin
     protected CoolConfig    coolConfig, aevyConfig;
     protected Send          send, aevySend;
 
+    private List<Reloadable>        reloadables;
+
     /**
      * Constructor for AevyDependent.
      */
@@ -37,12 +41,13 @@ public abstract class AevyDependent extends JavaPlugin
 
         coolConfig  = new CoolConfig(currentPlugin, ConfigType.DEFAULT);
         send        = new Send(coolConfig);
+        reloadables = new ArrayList<>();
     }
 
     /**
      * Reloads the coolConfig of the current plugin.
      */
-    public void reloadConfig()
+    public void reloadCoolConfig()
     {
         if (coolConfig != null)
         {
@@ -66,6 +71,31 @@ public abstract class AevyDependent extends JavaPlugin
     public void warningMessage(String message)
     {
         getLogger().warning(message);
+    }
+
+    public void infoMessage(String message)
+    {
+        getLogger().info(message);
+    }
+
+    public void addReloadable(Reloadable reloadable)
+    {
+        reloadables.add(reloadable);
+    }
+
+    public void reloadReloadable(Reloadable reloadable)
+    {
+        reloadable.reloadVars();
+    }
+
+    public void reloadReloadables()
+    {
+        reloadables.forEach(this::reloadReloadable);
+    }
+
+    public void removeReloadable(Reloadable reloadable)
+    {
+        reloadables.remove(reloadable);
     }
 
 }

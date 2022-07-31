@@ -1,6 +1,9 @@
 package fun.aevy.aevycore.utils.builders;
 
 import fun.aevy.aevycore.struct.elements.AevyDependent;
+import fun.aevy.aevycore.struct.elements.Reloadable;
+import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
+import fun.aevy.aevycore.utils.formatting.Send;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -10,10 +13,12 @@ import org.bukkit.plugin.PluginManager;
  * @since 1.0
  * @author Sorridi
  */
-public abstract class ListenerBuilder implements Listener
+public abstract class ListenerBuilder implements Listener, Reloadable
 {
     protected final AevyDependent   aevyDependent;
     protected final PluginManager   pluginManager;
+    protected final CoolConfig      coolConfig;
+    protected final Send            send;
 
     /**
      * Constructor for new Listeners, which they get automatically registered.
@@ -23,8 +28,13 @@ public abstract class ListenerBuilder implements Listener
     {
         this.aevyDependent  = aevyDependent;
         this.pluginManager  = aevyDependent.getServer().getPluginManager();
+        this.coolConfig     = aevyDependent.getCoolConfig();
+        this.send           = aevyDependent.getSend();
+
+        aevyDependent.addReloadable(this);
 
         registerEvents();
+        reloadVars();
     }
 
     /**

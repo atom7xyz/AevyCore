@@ -1,20 +1,21 @@
 package fun.aevy.aevycore;
 
-import fun.aevy.aevycore.commands.ReloadCommand;
-import fun.aevy.aevycore.commands.VersionCommand;
+import fun.aevy.aevycore.commands.AevyCommand;
+import fun.aevy.aevycore.struct.elements.Reloadable;
 import fun.aevy.aevycore.struct.elements.database.Database;
 import fun.aevy.aevycore.struct.elements.database.DatabaseConnection;
 import fun.aevy.aevycore.struct.manager.DatabasesManager;
 import fun.aevy.aevycore.utils.configuration.elements.ConfigType;
 import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
-import fun.aevy.aevycore.utils.configuration.entries.AevyCoreEntries;
-import fun.aevy.aevycore.utils.configuration.entries.DatabaseEntries;
-import fun.aevy.aevycore.utils.configuration.entries.GlobalEntries;
+import fun.aevy.aevycore.utils.configuration.entries.Aevy;
 import fun.aevy.aevycore.utils.formatting.Send;
 import lombok.Getter;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AevyCore's main class.
@@ -34,11 +35,10 @@ public final class AevyCore extends JavaPlugin
     private Database            database;
     private boolean             databaseEnabled;
 
-    private CoolConfig coolConfig;
-    private Send send;
+    private CoolConfig  coolConfig;
+    private Send        send;
 
-    private ReloadCommand   reloadCommand;
-    private VersionCommand  versionCommand;
+    private List<Reloadable> canReload;
 
     @Override
     public void onEnable()
@@ -46,43 +46,40 @@ public final class AevyCore extends JavaPlugin
         // Plugin startup logic
         aevyCore = this;
 
-        /* Loads the configuration. */
-        coolConfig = new CoolConfig(this, ConfigType.DEFAULT);
-        send       = new Send(coolConfig);
+        coolConfig  = new CoolConfig(this, ConfigType.DEFAULT);
+        send        = new Send(coolConfig);
+        canReload   = new ArrayList<>();
 
-        String support = "messages";
+        String path = "permissions";
+        coolConfig.add(Aevy.Perms.RELOAD,           path);
 
-        coolConfig.add(GlobalEntries.PREFIX,        support);
-        coolConfig.add(GlobalEntries.NO_PERMS,      support);
-        coolConfig.add(GlobalEntries.NO_PLAYER,     support);
-        coolConfig.add(GlobalEntries.NO_CONSOLE,    support);
+        path = "messages";
+        coolConfig.add(Aevy.Messages.PREFIX,        path);
+        coolConfig.add(Aevy.Messages.NO_PERMS,      path);
+        coolConfig.add(Aevy.Messages.NO_PLAYER,     path);
+        coolConfig.add(Aevy.Messages.NO_CONSOLE,    path);
 
-        support = "permissions";
+        path += ".commands.aevy";
+        coolConfig.add(Aevy.Messages.RELOAD,        path);
+        coolConfig.add(Aevy.Messages.VERSION,       path);
 
-        coolConfig.add(AevyCoreEntries.RELOAD_PERM, support);
+        path = "messages.usages";
+        coolConfig.add(Aevy.Usages.AEVY,            path);
 
-        support = "commands";
+        path = "database";
+        coolConfig.add(Aevy.Database.ENABLED,       path);
 
-        coolConfig.add(AevyCoreEntries.RELOAD_MESSAGE,   support);
-        coolConfig.add(AevyCoreEntries.VERSION_MESSAGE,  support);
-
-        support = "database";
-
-        // DRIVER, URL, IP, PORT, USER, PASSWORD, DATABASE, MAX_POOL_SIZE, DEBUG
-        coolConfig.add(DatabaseEntries.ENABLED,          support);
-
-        databaseEnabled = (Boolean) coolConfig.get(DatabaseEntries.ENABLED).getValue();
-
+        databaseEnabled = (Boolean) coolConfig.get(Aevy.Database.ENABLED).getValue();
         if (databaseEnabled)
         {
-            coolConfig.add(DatabaseEntries.DRIVER,           support);
-            coolConfig.add(DatabaseEntries.URL,              support);
-            coolConfig.add(DatabaseEntries.IP,               support);
-            coolConfig.add(DatabaseEntries.PORT,             support);
-            coolConfig.add(DatabaseEntries.USER,             support);
-            coolConfig.add(DatabaseEntries.PASSWORD,         support);
-            coolConfig.add(DatabaseEntries.MAX_POOL_SIZE,    support);
-            coolConfig.add(DatabaseEntries.DEBUG,            support);
+            coolConfig.add(Aevy.Database.DRIVER,           path);
+            coolConfig.add(Aevy.Database.URL,              path);
+            coolConfig.add(Aevy.Database.IP,               path);
+            coolConfig.add(Aevy.Database.PORT,             path);
+            coolConfig.add(Aevy.Database.USER,             path);
+            coolConfig.add(Aevy.Database.PASSWORD,         path);
+            coolConfig.add(Aevy.Database.MAX_POOL_SIZE,    path);
+            coolConfig.add(Aevy.Database.DEBUG,            path);
 
             databasesManager = new DatabasesManager(this);
 
@@ -99,19 +96,16 @@ public final class AevyCore extends JavaPlugin
 
         pluginManager = getServer().getPluginManager();
 
-        String reloadPerm = (String) coolConfig.getValue(AevyCoreEntries.RELOAD_PERM);
-
-        reloadCommand = new ReloadCommand(this, reloadPerm, "aevyreload");
-        versionCommand = new VersionCommand(this, null, "aevyversion");
+        new AevyCommand(this, "aevy")
+                .setUsage(Aevy.Usages.AEVY)
+                .setTabComplete(true)
+                .build();
     }
 
     @Override
     public void onDisable()
     {
         // Plugin shutdown logic
-
-        /* Saves the configuration. */
-        coolConfig.save();
 
         if (databaseEnabled)
         {

@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /**
  * Utility class used to send formatted messages to {@link CommandSender}s.
  * @since 1.5
@@ -31,7 +33,16 @@ public class Send
     public static void message(CommandSender sender, MessageProperties properties)
     {
         String message = properties.getMessage();
-        sender.sendMessage(message);
+
+        if (message == null)
+        {
+            List<String> messages = properties.getMessages();
+            messages.forEach(sender::sendMessage);
+        }
+        else
+        {
+            sender.sendMessage(message);
+        }
     }
 
     public static void broadcast(MessageProperties properties, boolean consoleToo)

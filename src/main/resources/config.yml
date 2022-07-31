@@ -1,16 +1,24 @@
 permissions:
-  RELOAD_PERM: "aevycore.reload"
-
+  RELOAD: "aevycore.reload"
 messages:
-  PREFIX: "&b AevyCore &7» "
-  NO_PERMS: "&cYou can't execute this command!"
-  NO_PLAYER: "&cYou can't execute this command as a player!"
-  NO_CONSOLE: "&cYou can't execute this command as the console!"
-
-commands:
-  RELOAD_MESSAGE: "&aConfiguration has been reloaded!"
-  VERSION_MESSAGE: "&fv{version} // {site}"
-
+  PREFIX: "&b AevyCore &7»"
+  NO_PERMS: "{prefix} &cYou can't execute this command!"
+  NO_PLAYER: "{prefix} &cYou can't execute this command as a player!"
+  NO_CONSOLE: "{prefix} &cYou can't execute this command as the console!"
+  commands:
+    aevy:
+      RELOAD: "{prefix} &aConfiguration has been reloaded!"
+      VERSION:
+        - " "
+        - "{prefix} v{ver} ({hash})"
+        - "{prefix} made by &cSorridi &7- &c{site}"
+        - " "
+  usages:
+    AEVY:
+      - " "
+      - "&b/aevy version &7» &fShow version in use."
+      - "&b/aevy reload &7» &fReload configuration."
+      - " "
 database:
   ENABLED: false
   DRIVER: "org.mariadb.jdbc.Driver"

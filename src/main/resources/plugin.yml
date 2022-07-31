@@ -7,7 +7,5 @@ website: https://www.sorridi.xyz
 depend: [ ActionBarAPI ]
 load: STARTUP
 commands:
-  aevyreload:
-    description: Reload the configuration.
-  aevyversion:
-    description: Prints the current version.
+  aevy:
+    description: Main command of the core.
