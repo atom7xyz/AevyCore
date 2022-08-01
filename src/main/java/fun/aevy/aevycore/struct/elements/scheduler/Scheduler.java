@@ -1,5 +1,9 @@
 package fun.aevy.aevycore.struct.elements.scheduler;
 
+import fun.aevy.aevycore.AevyCore;
+import fun.aevy.aevycore.struct.elements.AevyDependent;
+import fun.aevy.aevycore.struct.elements.Reloadable;
+import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -14,28 +18,51 @@ import java.util.logging.Logger;
  * @since 1.4
  * @author Sorridi
  */
-public class Scheduler
+public class Scheduler implements Reloadable
 {
+    protected final AevyDependent aevyDependent;
+    protected final CoolConfig    coolConfig;
+
     private final JavaPlugin        javaPlugin;
     private final Logger            logger;
-    private final BukkitScheduler   bukkitScheduler;
-    private final String            prefix;
 
-    private BukkitTask bukkitTask;
+    protected final BukkitScheduler bukkitScheduler;
+    protected final String          prefix;
 
-    private long    initialDelay, repeatEvery;
-    private boolean async, repeatable;
+    protected BukkitTask  bukkitTask;
+    protected long        initialDelay, repeatEvery;
+    protected boolean     async, repeatable;
 
     /**
      * Constructor for new Schedulers.
-     * @param javaPlugin The instance of the plugin.
+     * @param aevyCore The instance of the plugin.
      */
-    public Scheduler(JavaPlugin javaPlugin)
+    public Scheduler(AevyCore aevyCore)
     {
-        this.javaPlugin         = javaPlugin;
+        this.aevyDependent      = null;
+        this.coolConfig         = aevyCore.getCoolConfig();
+        this.javaPlugin         = aevyCore;
         this.logger             = javaPlugin.getLogger();
         this.bukkitScheduler    = javaPlugin.getServer().getScheduler();
         this.prefix             = "Scheduler: ";
+
+        reloadVars();
+    }
+
+    /**
+     * Constructor for new Schedulers.
+     * @param aevyDependent The instance of the plugin.
+     */
+    public Scheduler(AevyDependent aevyDependent)
+    {
+        this.aevyDependent      = aevyDependent;
+        this.coolConfig         = aevyDependent.getCoolConfig();
+        this.javaPlugin         = aevyDependent.getCurrentPlugin();
+        this.logger             = javaPlugin.getLogger();
+        this.bukkitScheduler    = javaPlugin.getServer().getScheduler();
+        this.prefix             = "Scheduler: ";
+
+        reloadVars();
     }
 
     /**
@@ -142,4 +169,9 @@ public class Scheduler
         bukkitTask.cancel();
     }
 
+    @Override
+    public void reloadVars()
+    {
+
+    }
 }

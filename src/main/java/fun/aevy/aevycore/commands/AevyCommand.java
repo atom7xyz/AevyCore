@@ -101,7 +101,7 @@ public class AevyCommand extends CommandsBuilder
 
         version.replace(new String[] { "{ver}", "{hash}", "{site}" }, new String[] { plVers, fileHash, plSite });
 
-        reloadPerm = (String) coolConfig.get(Aevy.Perms.RELOAD).getValue();
+        reloadPerm = (String) coolConfig.getValue(Aevy.Perms.RELOAD);
     }
 
 }

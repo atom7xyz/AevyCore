@@ -45,7 +45,7 @@ public class MessageProperties
 
     public MessageProperties(CoolConfig coolConfig, Enum<?> e)
     {
-        Object object = coolConfig.get(e).getValue();
+        Object object = coolConfig.getValue(e);
 
         if (object instanceof String)
         {

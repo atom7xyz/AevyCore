@@ -244,7 +244,7 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
 
     public CommandsBuilder setPermission(Enum<?> e)
     {
-        this.permission = (String) coolConfig.get(e).getValue();
+        this.permission = (String) coolConfig.getValue(e);
         return this;
     }
 

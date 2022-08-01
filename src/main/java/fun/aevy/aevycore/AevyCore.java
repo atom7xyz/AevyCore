@@ -69,17 +69,20 @@ public final class AevyCore extends JavaPlugin
         path = "database";
         coolConfig.add(Aevy.Database.ENABLED,       path);
 
-        databaseEnabled = (Boolean) coolConfig.get(Aevy.Database.ENABLED).getValue();
+        databaseEnabled = (Boolean) coolConfig.getValue(Aevy.Database.ENABLED);
         if (databaseEnabled)
         {
-            coolConfig.add(Aevy.Database.DRIVER,           path);
-            coolConfig.add(Aevy.Database.URL,              path);
-            coolConfig.add(Aevy.Database.IP,               path);
-            coolConfig.add(Aevy.Database.PORT,             path);
-            coolConfig.add(Aevy.Database.USER,             path);
-            coolConfig.add(Aevy.Database.PASSWORD,         path);
-            coolConfig.add(Aevy.Database.MAX_POOL_SIZE,    path);
-            coolConfig.add(Aevy.Database.DEBUG,            path);
+            coolConfig.add(Aevy.Database.DATABASE,          path);
+            coolConfig.add(Aevy.Database.DRIVER,            path);
+            coolConfig.add(Aevy.Database.URL,               path);
+            coolConfig.add(Aevy.Database.IP,                path);
+            coolConfig.add(Aevy.Database.PORT,              path);
+            coolConfig.add(Aevy.Database.USER,              path);
+            coolConfig.add(Aevy.Database.PASSWORD,          path);
+            coolConfig.add(Aevy.Database.MAX_POOL_SIZE,     path);
+            coolConfig.add(Aevy.Database.DEBUG,             path);
+            coolConfig.add(Aevy.Database.USE_DEFAULTS,      path);
+            coolConfig.add(Aevy.Database.PROPERTIES,        path);
 
             databasesManager = new DatabasesManager(this);
 

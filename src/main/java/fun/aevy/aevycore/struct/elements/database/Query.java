@@ -50,6 +50,11 @@ public class Query
         return "SELECT " + target + " FROM " + table + " WHERE " + field + " = ?;";
     }
 
+    public String pendingUpdateWhere(@NotNull String target, @NotNull String field)
+    {
+        return "UPDATE " + table + " SET " + field + " = ? WHERE " + target + " = ?;";
+    }
+
     public String pendingDeleteWhere(@NotNull String target, @NotNull String field)
     {
         return "DELETE FROM " + table + " WHERE " + field + " = ?;";
@@ -140,7 +145,7 @@ public class Query
         return stringBuilder.toString();
     }
 
-    public String pendingUpdate(@NotNull String[] fields, @NotNull String target)
+    public String pendingUpdateWhere(@NotNull String[] fields, @NotNull String target)
     {
         StringBuilder stringBuilder = new StringBuilder("UPDATE ");
 

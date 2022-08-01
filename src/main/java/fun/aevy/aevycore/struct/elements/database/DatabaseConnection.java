@@ -63,8 +63,7 @@ public class DatabaseConnection
         this.properties     = new HashMap<>();
         this.useDefaults    = (boolean) coolConfig.getValue(Aevy.Database.USE_DEFAULTS);
         this.poolSize       = (int) coolConfig.getValue(Aevy.Database.MAX_POOL_SIZE);
-
-        List<String> list = (List<String>) coolConfig.getValue(Aevy.Database.PROPERTIES);
+        List<String> list   = (List<String>) coolConfig.getValue(Aevy.Database.PROPERTIES);
 
         for (String s : list)
         {
