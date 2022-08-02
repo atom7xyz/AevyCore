@@ -84,7 +84,7 @@ public class Scheduler implements Reloadable
      */
     public Scheduler delay(long initialDelay, TimeUnit timeUnit)
     {
-        initialDelay = timeUnit.toSeconds(initialDelay) / 20;
+        initialDelay = timeUnit.toSeconds(initialDelay) * 20;
         return this;
     }
 
@@ -119,7 +119,7 @@ public class Scheduler implements Reloadable
             return this;
         }
         repeatable = true;
-        this.repeatEvery = timeUnit.toSeconds(repeatEvery) / 20;
+        this.repeatEvery = timeUnit.toSeconds(repeatEvery) * 20;
         return this;
     }
 
@@ -141,15 +141,27 @@ public class Scheduler implements Reloadable
     public void runTask(@NotNull Runnable runnable)
     {
         if (async)
+        {
             if (repeatable)
-                bukkitTask = bukkitScheduler.runTaskLaterAsynchronously(javaPlugin, runnable, initialDelay);
-            else
+            {
                 bukkitTask = bukkitScheduler.runTaskTimerAsynchronously(javaPlugin, runnable, initialDelay, repeatEvery);
-        else
-            if (repeatable)
-                bukkitTask = bukkitScheduler.runTaskLater(javaPlugin, runnable, initialDelay);
+            }
             else
+            {
+                bukkitTask = bukkitScheduler.runTaskLaterAsynchronously(javaPlugin, runnable, initialDelay);
+            }
+        }
+        else
+        {
+            if (repeatable)
+            {
                 bukkitTask = bukkitScheduler.runTaskTimer(javaPlugin, runnable, initialDelay, repeatEvery);
+            }
+            else
+            {
+                bukkitTask = bukkitScheduler.runTaskLater(javaPlugin, runnable, initialDelay);
+            }
+        }
     }
 
     /**
