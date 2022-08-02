@@ -98,18 +98,17 @@ public class DatabaseConnection
         dataSource = new HikariDataSource(hikariConfig);
     }
 
+    @SafeVarargs
     @SneakyThrows
-    public <G extends AutoCloseable> void close(@Nullable G connection)
+    public final <G extends AutoCloseable> void close(@Nullable G... connections)
     {
-        if (connection == null)
-            return;
-
-        connection.close();
-    }
-
-    public <G extends AutoCloseable> void close(List<G> connections)
-    {
-        connections.forEach(this::close);
+        for (G connection : connections)
+        {
+            if (connection != null)
+            {
+                connection.close();
+            }
+        }
     }
 
 }

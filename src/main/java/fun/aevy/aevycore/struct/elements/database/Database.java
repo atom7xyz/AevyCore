@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 @Getter
 public class Database extends Thread
 {
-
     private final JavaPlugin    javaPlugin;
     private final Logger        logger;
 
@@ -28,11 +27,9 @@ public class Database extends Thread
     @Setter
     private BlockingQueue<DatabaseOperation>    databaseOperations;
 
-    private final boolean   debug;
-    private boolean         running, locked;
-
-    private long timeToWait;
-    private int opsCounter;
+    private boolean debug, running, locked;
+    private long    timeToWait;
+    private int     opsCounter;
 
     public Database(
                         JavaPlugin          javaPlugin,
@@ -51,7 +48,7 @@ public class Database extends Thread
 
         databasesManager.addDatabase(this);
 
-        setName("DB #" + databasesManager.getDatabasesNum());
+        setName("Aevy-Database #" + databasesManager.getDatabasesNum());
         this.running = true;
         start();
     }
@@ -68,6 +65,12 @@ public class Database extends Thread
             return;
 
         databaseOperations.add(databaseOperation);
+    }
+
+    public Database debug(boolean value)
+    {
+        debug = value;
+        return this;
     }
 
     public void stopRunning()
@@ -94,10 +97,9 @@ public class Database extends Thread
 
             if (debug)
             {
-                String timing   = "TIME[" + (System.currentTimeMillis() - time) + "ms] ";
-                String name     = "WORKER[" + getName() + "] ";
-                String ops      = "OPS[" + opsCounter + "] ";
-                logger.info(name + ops + timing);
+                String timing   = "time = " + (System.currentTimeMillis() - time) + "ms";
+                String ops      = "operations = " + opsCounter + ", ";
+                logger.info(ops + timing);
             }
             opsCounter = 0;
         }
@@ -122,9 +124,13 @@ public class Database extends Thread
                 databaseOperation.writePaper(connection, databaseConnection);
                 opsCounter++;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
-        } finally {
+        }
+        finally
+        {
             databaseConnection.close(connection);
         }
         locked = false;

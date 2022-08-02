@@ -90,6 +90,7 @@ public final class AevyCore extends JavaPlugin
             databasesManager.addConnection("AevyCore", databaseConnection);
 
             database = new Database(this, databasesManager, databaseConnection);
+            database.debug((Boolean) coolConfig.getValue(Aevy.Database.DEBUG));
         }
 
         /* Loads all the useful variables. */
