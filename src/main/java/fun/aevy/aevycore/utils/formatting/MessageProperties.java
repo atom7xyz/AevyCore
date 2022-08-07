@@ -85,11 +85,7 @@ public class MessageProperties
         if (primitiveMessage == null)
         {
             List<String> temp = primitiveList;
-
-            for (int i = 0; i < primitiveList.size(); i++)
-            {
-                temp.set(i, Shortcuts.color(temp.get(i).replace(toReplace, replacements)));
-            }
+            temp.replaceAll(s -> Shortcuts.color(s.replace(toReplace, replacements)));
             actualList = temp;
         }
         else
@@ -108,9 +104,7 @@ public class MessageProperties
 
         if (primitiveMessage == null)
         {
-            List<String> temp = primitiveList;
-            temp.set(index, Shortcuts.color(temp.get(index).replace(toReplace, replacements)));
-            actualList = temp;
+            actualList.set(index, Shortcuts.color(primitiveList.get(index).replace(toReplace, replacements)));
         }
         else
         {
@@ -172,7 +166,16 @@ public class MessageProperties
         this.prefix = prefix;
         prefixed    = true;
 
-        replace("{prefix}", prefix);
+        if (primitiveMessage == null)
+        {
+            primitiveList.replaceAll(s -> Shortcuts.color(s.replace("{prefix}", prefix)));
+            actualList = primitiveList;
+        }
+        else
+        {
+            primitiveMessage = Shortcuts.color(primitiveMessage.replace("{prefix}", prefix));
+            actualMessage = primitiveMessage;
+        }
 
         return this;
     }
@@ -182,7 +185,16 @@ public class MessageProperties
         this.prefix = "";
         prefixed    = false;
 
-        replace("{prefix}", prefix);
+        if (primitiveMessage == null)
+        {
+            primitiveList.replaceAll(s -> Shortcuts.color(s.replace("{prefix}", prefix)));
+            actualList = primitiveList;
+        }
+        else
+        {
+            primitiveMessage = Shortcuts.color(primitiveMessage.replace("{prefix}", prefix));
+            actualMessage = primitiveMessage;
+        }
 
         return this;
     }
