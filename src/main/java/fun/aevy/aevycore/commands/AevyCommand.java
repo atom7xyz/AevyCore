@@ -53,7 +53,7 @@ public class AevyCommand extends CommandsBuilder
                     }
                     else
                     {
-                        send.message(commandSender, Aevy.Messages.NO_PERMS);
+                        Send.message(commandSender, noPerms);
                     }
                     break;
                 }

@@ -36,6 +36,7 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
     protected final AevyCore    aevyCore;
     protected final CoolConfig  coolConfig;
     protected final Send        send;
+    protected MessageProperties noPlayer, noConsole, noPerms, unknownPlayer;
 
     /**
      * Constructor for new Commands, which they get automatically registered.
@@ -47,12 +48,11 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
             @NotNull    AevyDependent   aevyDependent,
             @NotNull    String          command
     ) {
-        this.aevyDependent = aevyDependent;
-
-        this.aevyCore   = aevyDependent.getAevyCore();
-        this.coolConfig = aevyDependent.getCoolConfig();
-        this.send       = aevyDependent.getSend();
-        this.plugin     = aevyDependent.getCurrentPlugin();
+        this.aevyDependent  = aevyDependent;
+        this.aevyCore       = aevyDependent.getAevyCore();
+        this.coolConfig     = aevyDependent.getCoolConfig();
+        this.send           = aevyDependent.getSend();
+        this.plugin         = aevyDependent.getCurrentPlugin();
 
         this.command        = command;
         this.onlyPlayer     = false;
@@ -61,6 +61,7 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         this.tabComplete    = false;
         this.permission     = null;
 
+        reloadDefaults();
         reloadVars();
     }
 
@@ -74,12 +75,11 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
             @NotNull    AevyCore    aevyCore,
             @NotNull    String      command
     ) {
-        this.aevyDependent = null;
-
-        this.aevyCore   = aevyCore;
-        this.coolConfig = aevyCore.getCoolConfig();
-        this.send       = aevyCore.getSend();
-        this.plugin     = aevyCore;
+        this.aevyDependent  = null;
+        this.aevyCore       = aevyCore;
+        this.coolConfig     = aevyCore.getCoolConfig();
+        this.send           = aevyCore.getSend();
+        this.plugin         = aevyCore;
 
         this.command        = command;
         this.onlyPlayer     = false;
@@ -88,6 +88,7 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         this.tabComplete    = false;
         this.permission     = null;
 
+        reloadDefaults();
         reloadVars();
     }
 
@@ -104,19 +105,19 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
     ) {
         if (onlyConsole && sender instanceof Player)
         {
-            send.message(sender, Aevy.Messages.NO_PLAYER);
+            Send.message(sender, noPlayer);
             return false;
         }
 
         if (onlyPlayer && sender instanceof ConsoleCommandSender)
         {
-            send.message(sender, Aevy.Messages.NO_CONSOLE);
+            Send.message(sender, noConsole);
             return false;
         }
 
         if (permission != null && !sender.hasPermission(permission))
         {
-            send.message(sender, Aevy.Messages.NO_PERMS);
+            Send.message(sender, noPerms);
             return false;
         }
 
@@ -224,15 +225,9 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         return this;
     }
 
-    public CommandsBuilder setUsage(List<String> usage)
-    {
-        this.usage = new MessageProperties(usage);
-        return this;
-    }
-
     public CommandsBuilder setUsage(Enum<?> e)
     {
-        this.usage = coolConfig.get(e).getMessageProperties();
+        this.usage = coolConfig.getProperties(e);
         return this;
     }
 
@@ -265,6 +260,14 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         {
             aevyDependent.addReloadable(this);
         }
+    }
+
+    public void reloadDefaults()
+    {
+        noPlayer        = coolConfig.getProperties(Aevy.Global.NO_PLAYER);
+        noConsole       = coolConfig.getProperties(Aevy.Global.NO_CONSOLE);
+        noPerms         = coolConfig.getProperties(Aevy.Global.NO_PERMS);
+        unknownPlayer   = coolConfig.getProperties(Aevy.Global.UNKNOWN_PLAYER);
     }
 
 }

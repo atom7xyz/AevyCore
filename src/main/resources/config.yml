@@ -5,6 +5,7 @@ messages:
   NO_PERMS: "{prefix} &cYou can't execute this command!"
   NO_PLAYER: "{prefix} &cYou can't execute this command as a player!"
   NO_CONSOLE: "{prefix} &cYou can't execute this command as the console!"
+  UNKNOWN_PLAYER: "{prefix} &cThe player does not exist!"
   commands:
     aevy:
       RELOAD: "{prefix} &aConfiguration has been reloaded!"

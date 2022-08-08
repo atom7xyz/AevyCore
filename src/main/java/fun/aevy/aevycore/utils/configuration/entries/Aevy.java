@@ -9,7 +9,12 @@ public class Aevy
 
     public enum Messages
     {
-        PREFIX, NO_PERMS, NO_PLAYER, NO_CONSOLE, RELOAD, VERSION
+        PREFIX, RELOAD, VERSION
+    }
+
+    public enum Global
+    {
+        UNKNOWN_PLAYER, NO_PERMS, NO_PLAYER, NO_CONSOLE
     }
 
     public enum Usages

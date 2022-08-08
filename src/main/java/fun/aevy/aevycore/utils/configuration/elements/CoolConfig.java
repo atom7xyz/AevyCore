@@ -2,6 +2,7 @@ package fun.aevy.aevycore.utils.configuration.elements;
 
 import fun.aevy.aevycore.utils.formatting.MessageProperties;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,6 +24,9 @@ public class CoolConfig
     protected FileConfiguration fileConfiguration;
 
     protected HashMap<Enum<?>, ConfigEntry> entries;
+
+    @Setter
+    protected String tempPath;
 
     /**
      * Creates a new empty coolConfig.
@@ -85,14 +89,13 @@ public class CoolConfig
     /**
      * Assembles part of the given path with the Enum's name, then it creates and puts a new entry
      * in the HashMap.
-     * @param e     The enum to be added.
-     * @param path  The path of the new {@link ConfigEntry}.
+     * @param e The enum to be added.
      * @since 1.0
      */
-    public void add(Enum<?> e, String path)
+    public void add(Enum<?> e)
     {
         String prefix   = getCurrentPrefix();
-        String newPath  = path + "." + e.name();
+        String newPath  = tempPath + "." + e.name();
         Object value    = fileConfiguration.get(newPath);
 
         boolean entryWithPrefix         = entryHasPrefix(value);
@@ -102,16 +105,16 @@ public class CoolConfig
         if (value instanceof String)
         {
             properties  = new MessageProperties((String) value);
-            newEntry    = new ConfigEntry(path, value, properties, true);
+            newEntry    = new ConfigEntry(tempPath, value, properties, true);
         }
         else if (value instanceof ArrayList)
         {
             properties  = new MessageProperties((List<String>) value);
-            newEntry    = new ConfigEntry(path, value, properties, true);
+            newEntry    = new ConfigEntry(tempPath, value, properties, true);
         }
         else
         {
-            newEntry = new ConfigEntry(path, value, null, false);
+            newEntry = new ConfigEntry(tempPath, value, null, false);
         }
 
         if (properties != null)

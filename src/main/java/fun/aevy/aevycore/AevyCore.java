@@ -50,39 +50,40 @@ public final class AevyCore extends JavaPlugin
         send        = new Send(coolConfig);
         canReload   = new ArrayList<>();
 
-        String path = "permissions";
-        coolConfig.add(Aevy.Perms.RELOAD,           path);
+        coolConfig.setTempPath("permissions");
+        coolConfig.add(Aevy.Perms.RELOAD);
 
-        path = "messages";
-        coolConfig.add(Aevy.Messages.PREFIX,        path);
-        coolConfig.add(Aevy.Messages.NO_PERMS,      path);
-        coolConfig.add(Aevy.Messages.NO_PLAYER,     path);
-        coolConfig.add(Aevy.Messages.NO_CONSOLE,    path);
+        coolConfig.setTempPath("messages");
+        coolConfig.add(Aevy.Messages.PREFIX);
+        coolConfig.add(Aevy.Global.NO_PERMS);
+        coolConfig.add(Aevy.Global.NO_PLAYER);
+        coolConfig.add(Aevy.Global.NO_CONSOLE);
+        coolConfig.add(Aevy.Global.UNKNOWN_PLAYER);
 
-        path += ".commands.aevy";
-        coolConfig.add(Aevy.Messages.RELOAD,        path);
-        coolConfig.add(Aevy.Messages.VERSION,       path);
+        coolConfig.setTempPath("messages.commands.aevy");
+        coolConfig.add(Aevy.Messages.RELOAD);
+        coolConfig.add(Aevy.Messages.VERSION);
 
-        path = "messages.usages";
-        coolConfig.add(Aevy.Usages.AEVY,            path);
+        coolConfig.setTempPath("messages.usages");
+        coolConfig.add(Aevy.Usages.AEVY);
 
-        path = "database";
-        coolConfig.add(Aevy.Database.ENABLED,       path);
+        coolConfig.setTempPath("database");
+        coolConfig.add(Aevy.Database.ENABLED);
 
         databaseEnabled = (Boolean) coolConfig.getValue(Aevy.Database.ENABLED);
         if (databaseEnabled)
         {
-            coolConfig.add(Aevy.Database.DATABASE,          path);
-            coolConfig.add(Aevy.Database.DRIVER,            path);
-            coolConfig.add(Aevy.Database.URL,               path);
-            coolConfig.add(Aevy.Database.IP,                path);
-            coolConfig.add(Aevy.Database.PORT,              path);
-            coolConfig.add(Aevy.Database.USER,              path);
-            coolConfig.add(Aevy.Database.PASSWORD,          path);
-            coolConfig.add(Aevy.Database.MAX_POOL_SIZE,     path);
-            coolConfig.add(Aevy.Database.DEBUG,             path);
-            coolConfig.add(Aevy.Database.USE_DEFAULTS,      path);
-            coolConfig.add(Aevy.Database.PROPERTIES,        path);
+            coolConfig.add(Aevy.Database.DATABASE);
+            coolConfig.add(Aevy.Database.DRIVER);
+            coolConfig.add(Aevy.Database.URL);
+            coolConfig.add(Aevy.Database.IP);
+            coolConfig.add(Aevy.Database.PORT);
+            coolConfig.add(Aevy.Database.USER);
+            coolConfig.add(Aevy.Database.PASSWORD);
+            coolConfig.add(Aevy.Database.MAX_POOL_SIZE);
+            coolConfig.add(Aevy.Database.DEBUG);
+            coolConfig.add(Aevy.Database.USE_DEFAULTS);
+            coolConfig.add(Aevy.Database.PROPERTIES);
 
             databasesManager = new DatabasesManager(this);
 

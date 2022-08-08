@@ -120,19 +120,28 @@ public class MessageProperties
             return this;
         }
 
+        int length = toReplace.length;
+
         if (primitiveMessage == null)
         {
-            for (int i = 0; i < toReplace.length; i++)
+            List<String> temp = primitiveList;
+
+            for (int i = 0; i < length; i++)
             {
-                replace(toReplace[i], replacements[i]);
+                int a = i;
+                temp.replaceAll(s -> Shortcuts.color(s.replace(toReplace[a], replacements[a])));
             }
+            actualList = temp;
         }
         else
         {
-            for (int i = 0; i < toReplace.length; i++)
+            String temp = primitiveMessage;
+
+            for (int i = 0; i < length; i++)
             {
-                replace(toReplace[i], replacements[i]);
+                temp = temp.replace(toReplace[i], replacements[i]);
             }
+            actualMessage = Shortcuts.color(temp);
         }
         return this;
     }
