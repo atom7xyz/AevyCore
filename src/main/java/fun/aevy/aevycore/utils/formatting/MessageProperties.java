@@ -4,6 +4,7 @@ import fun.aevy.aevycore.utils.Shortcuts;
 import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -75,45 +76,49 @@ public class MessageProperties
         this.prefixed      = true;
     }
 
-    public MessageProperties replace(String toReplace, String replacements)
+    public MessageProperties replace(String toReplace, Object replacement)
     {
         if (primitiveMessage == null && primitiveList == null)
         {
             return this;
         }
 
+        String strReplacement = String.valueOf(replacement);
+
         if (primitiveMessage == null)
         {
-            List<String> temp = primitiveList;
-            temp.replaceAll(s -> Shortcuts.color(s.replace(toReplace, replacements)));
+            List<String> temp = new ArrayList<>(primitiveList);
+            temp.replaceAll(s -> Shortcuts.color(s.replace(toReplace, strReplacement)));
             actualList = temp;
         }
         else
         {
-            actualMessage = Shortcuts.color(primitiveMessage.replace(toReplace, replacements));
+            actualMessage = Shortcuts.color(primitiveMessage.replace(toReplace, strReplacement));
         }
         return this;
     }
 
-    public MessageProperties replace(int index, String toReplace, String replacements)
+    public MessageProperties replace(int index, String toReplace, String replacement)
     {
         if (primitiveMessage == null && primitiveList == null)
         {
             return this;
         }
 
+        String strReplacement = String.valueOf(replacement);
+
         if (primitiveMessage == null)
         {
-            actualList.set(index, Shortcuts.color(primitiveList.get(index).replace(toReplace, replacements)));
+            actualList.set(index, Shortcuts.color(primitiveList.get(index).replace(toReplace, strReplacement)));
         }
         else
         {
-            actualMessage = Shortcuts.color(primitiveMessage.replace(toReplace, replacements));
+            actualMessage = Shortcuts.color(primitiveMessage.replace(toReplace, strReplacement));
         }
         return this;
     }
 
-    public MessageProperties replace(String[] toReplace, String[] replacements)
+    public MessageProperties replace(String[] toReplace, Object[] replacements)
     {
         if (primitiveMessage == null && primitiveList == null)
         {
@@ -122,14 +127,20 @@ public class MessageProperties
 
         int length = toReplace.length;
 
+        String[] strReplacement = new String[length];
+        for (int i = 0; i < length; i++)
+        {
+            strReplacement[i] = String.valueOf(replacements[i]);
+        }
+
         if (primitiveMessage == null)
         {
-            List<String> temp = primitiveList;
+            List<String> temp = new ArrayList<>(primitiveList);
 
             for (int i = 0; i < length; i++)
             {
                 int a = i;
-                temp.replaceAll(s -> Shortcuts.color(s.replace(toReplace[a], replacements[a])));
+                temp.replaceAll(s -> Shortcuts.color(s.replace(toReplace[a], strReplacement[a])));
             }
             actualList = temp;
         }
@@ -139,32 +150,40 @@ public class MessageProperties
 
             for (int i = 0; i < length; i++)
             {
-                temp = temp.replace(toReplace[i], replacements[i]);
+                temp = temp.replace(toReplace[i], strReplacement[i]);
             }
             actualMessage = Shortcuts.color(temp);
         }
         return this;
     }
 
-    public MessageProperties replace(int index, String[] toReplace, String[] replacements)
+    public MessageProperties replace(int index, String[] toReplace, Object[] replacements)
     {
         if (primitiveMessage == null && primitiveList == null)
         {
             return this;
         }
 
+        int length = toReplace.length;
+
+        String[] strReplacement = new String[length];
+        for (int i = 0; i < length; i++)
+        {
+            strReplacement[i] = String.valueOf(replacements[i]);
+        }
+
         if (primitiveMessage == null)
         {
             for (int i = 0; i < toReplace.length; i++)
             {
-                replace(index, toReplace[i], replacements[i]);
+                replace(index, toReplace[i], strReplacement[i]);
             }
         }
         else
         {
             for (int i = 0; i < toReplace.length; i++)
             {
-                replace(index, toReplace[i], replacements[i]);
+                replace(index, toReplace[i], strReplacement[i]);
             }
         }
         return this;

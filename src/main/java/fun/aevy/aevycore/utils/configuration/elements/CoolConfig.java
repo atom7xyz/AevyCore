@@ -76,6 +76,45 @@ public class CoolConfig
     }
 
     /**
+     * Retrieves the value of the {@link ConfigEntry} correspondent to the Enum
+     * @param e             The enum to be searched.
+     * @param defaultValue  The default value.
+     * @return The {@link ConfigEntry#getValue()}.
+     * @since 1.0
+     */
+    public Object getValue(Enum<?> e, Object defaultValue)
+    {
+        Object object = getValue(e);
+
+        if (object instanceof Integer)
+        {
+            return (int) object < (int) defaultValue ? defaultValue : object;
+        }
+
+        if (object instanceof Double)
+        {
+            return (double) object < (double) defaultValue ? defaultValue : object;
+        }
+
+        if (object instanceof Float)
+        {
+            return (float) object < (float) defaultValue ? defaultValue : object;
+        }
+
+        if (object instanceof Short)
+        {
+            return (short) object < (short) defaultValue ? defaultValue : object;
+        }
+
+        if (object instanceof String)
+        {
+            return ((String) object).isEmpty() ? defaultValue : object;
+        }
+
+        return object;
+    }
+
+    /**
      * Retrieves the path of the {@link ConfigEntry} correspondent to the Enum
      * @param e The enum to be searched.
      * @return  The {@link ConfigEntry#getPath()}.

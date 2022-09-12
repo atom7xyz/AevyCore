@@ -46,6 +46,7 @@ public class Scheduler implements Reloadable
         this.bukkitScheduler    = javaPlugin.getServer().getScheduler();
         this.prefix             = "Scheduler: ";
 
+        aevyCore.getCanReload().add(this);
         reloadVars();
     }
 
@@ -62,6 +63,7 @@ public class Scheduler implements Reloadable
         this.bukkitScheduler    = javaPlugin.getServer().getScheduler();
         this.prefix             = "Scheduler: ";
 
+        aevyDependent.addReloadable(this);
         reloadVars();
     }
 
@@ -84,7 +86,7 @@ public class Scheduler implements Reloadable
      */
     public Scheduler delay(long initialDelay, TimeUnit timeUnit)
     {
-        initialDelay = timeUnit.toSeconds(initialDelay) * 20;
+        this.initialDelay = timeUnit.toSeconds(initialDelay) * 20;
         return this;
     }
 
@@ -178,7 +180,16 @@ public class Scheduler implements Reloadable
      */
     public void cancel()
     {
+        removeReloadable();
         bukkitTask.cancel();
+    }
+
+    private void removeReloadable()
+    {
+        if (aevyDependent != null)
+        {
+            aevyDependent.removeReloadable(this);
+        }
     }
 
     @Override
