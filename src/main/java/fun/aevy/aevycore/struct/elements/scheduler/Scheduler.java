@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @since 1.4
  * @author Sorridi
  */
-public class Scheduler implements Reloadable
+public abstract class Scheduler implements Reloadable
 {
     protected final AevyDependent aevyDependent;
     protected final CoolConfig    coolConfig;
@@ -135,6 +135,8 @@ public class Scheduler implements Reloadable
         this.async = async;
         return this;
     }
+
+    public abstract void runTask(Object... args);
 
     /**
      * Runs the task assigned to the Scheduler.

@@ -128,47 +128,50 @@ public class CoolConfig
     /**
      * Assembles part of the given path with the Enum's name, then it creates and puts a new entry
      * in the HashMap.
-     * @param e The enum to be added.
+     * @param enums The enum to be added.
      * @since 1.0
      */
-    public void add(Enum<?> e)
+    public void add(Enum<?>... enums)
     {
-        String prefix   = getCurrentPrefix();
-        String newPath  = tempPath + "." + e.name();
-        Object value    = fileConfiguration.get(newPath);
+        for (Enum<?> e : enums)
+        {
+            String prefix   = getCurrentPrefix();
+            String newPath  = tempPath + "." + e.name();
+            Object value    = fileConfiguration.get(newPath);
 
-        boolean entryWithPrefix         = entryHasPrefix(value);
-        MessageProperties properties    = null;
-        ConfigEntry newEntry;
+            boolean entryWithPrefix         = entryHasPrefix(value);
+            MessageProperties properties    = null;
+            ConfigEntry newEntry;
 
-        if (value instanceof String)
-        {
-            properties  = new MessageProperties((String) value);
-            newEntry    = new ConfigEntry(tempPath, value, properties, true);
-        }
-        else if (value instanceof ArrayList)
-        {
-            properties  = new MessageProperties((List<String>) value);
-            newEntry    = new ConfigEntry(tempPath, value, properties, true);
-        }
-        else
-        {
-            newEntry = new ConfigEntry(tempPath, value, null, false);
-        }
-
-        if (properties != null)
-        {
-            if (entryWithPrefix)
+            if (value instanceof String)
             {
-                properties.withPrefix(prefix);
+                properties  = new MessageProperties((String) value);
+                newEntry    = new ConfigEntry(tempPath, value, properties, true);
+            }
+            else if (value instanceof ArrayList)
+            {
+                properties  = new MessageProperties((List<String>) value);
+                newEntry    = new ConfigEntry(tempPath, value, properties, true);
             }
             else
             {
-                properties.noPrefix();
+                newEntry = new ConfigEntry(tempPath, value, null, false);
             }
-        }
 
-        entries.put(e, newEntry);
+            if (properties != null)
+            {
+                if (entryWithPrefix)
+                {
+                    properties.withPrefix(prefix);
+                }
+                else
+                {
+                    properties.noPrefix();
+                }
+            }
+
+            entries.put(e, newEntry);
+        }
     }
 
     private boolean entryHasPrefix(Object object)
@@ -186,6 +189,10 @@ public class CoolConfig
          return false;
     }
 
+    /**
+     * Gets messages.PREFIX from config.
+     * @return The current prefix.
+     */
     private String getCurrentPrefix()
     {
         return fileConfiguration.getString("messages.PREFIX");
@@ -305,6 +312,11 @@ public class CoolConfig
         fileConfiguration.set(path, object);
     }
 
+    /**
+     * Shortcut for getting the {@link MessageProperties}.
+     * @param e The key of the entry.
+     * @return The properties of the message.
+     */
     public MessageProperties getProperties(Enum<?> e)
     {
         return get(e).getMessageProperties();
