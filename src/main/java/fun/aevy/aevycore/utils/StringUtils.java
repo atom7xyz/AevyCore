@@ -3,6 +3,7 @@ package fun.aevy.aevycore.utils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.ChatColor;
 
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +16,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class StringUtils
 {
+    private static DecimalFormat singleDigitFormat  = new DecimalFormat("0.0");
+    private static DecimalFormat doubleDigitFormat  = new DecimalFormat("0.00");
+
     /**
      * Converts minutes in String, using HH:mm format.
      * @param minutes The minutes.
@@ -166,4 +170,15 @@ public class StringUtils
     {
         return NumberUtils.isNumber(string);
     }
+
+    public static String formatSingle(double value)
+    {
+        return singleDigitFormat.format(value);
+    }
+
+    public static String formatDouble(double value)
+    {
+        return doubleDigitFormat.format(value);
+    }
+
 }
