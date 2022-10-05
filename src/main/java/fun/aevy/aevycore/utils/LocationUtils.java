@@ -146,4 +146,20 @@ public class LocationUtils
         return location;
     }
 
+    public static Location getMiddleLocation(Location location)
+    {
+        World world = location.getWorld();
+
+        double x = location.getBlockY() + .5;
+        double y = location.getY();
+        double z = location.getBlockZ() + .5;
+
+        float yaw   = location.getYaw();
+        float pitch = location.getPitch();
+
+        return new Location(world, x, y, z, yaw, pitch);
+    }
+
+
+
 }
