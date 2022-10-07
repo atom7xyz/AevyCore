@@ -148,12 +148,17 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         String argString = args[--length];
 
         if (argString.isEmpty())
+        {
             players.forEach(player -> names.add(player.getName()));
+
+        }
         else
+        {
             players
                     .stream()
-                    .filter(player -> player.getName().startsWith(argString))
+                    .filter(player -> player.getName().toLowerCase().startsWith(argString))
                     .forEach(player -> names.add(player.getName()));
+        }
 
         return names;
     }
@@ -171,7 +176,9 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         String argString = args[--length];
 
         if (argString.isEmpty())
+        {
             return Arrays.asList(args);
+        }
 
         Arrays.stream(args)
                 .filter(s -> s.startsWith(argString))
@@ -198,7 +205,7 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
                 return Collections.emptyList();
             }
 
-            return  tabCompleted
+            return tabCompleted
                     .stream()
                     .filter(arg -> arg.startsWith(args[length - 1]))
                     .collect(Collectors.toList());
