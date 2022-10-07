@@ -105,11 +105,29 @@ public class PlaySoundTask extends Scheduler
         });
     }
 
+    public void runTask(Sound sound, Entity entity, int volume, int pitch, int range)
+    {
+        runTask(() ->
+        {
+            SoundUtils.playNearby(sound, entity, volume, pitch, range);
+            dec();
+        });
+    }
+
     public void runTask(Location location, Sound sound, Entity entity, int range)
     {
         runTask(() ->
         {
             SoundUtils.playNearby(location, sound, entity, range);
+            dec();
+        });
+    }
+
+    public void runTask(Location location, Sound sound, Entity entity, int volume, int pitch, int range)
+    {
+        runTask(() ->
+        {
+            SoundUtils.playNearby(location, sound, entity, volume, pitch, range);
             dec();
         });
     }
