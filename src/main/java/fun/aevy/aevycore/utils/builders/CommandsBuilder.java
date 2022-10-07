@@ -150,13 +150,12 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         if (argString.isEmpty())
         {
             players.forEach(player -> names.add(player.getName()));
-
         }
         else
         {
             players
                     .stream()
-                    .filter(player -> player.getName().toLowerCase().startsWith(argString))
+                    .filter(player -> player.getName().startsWith(argString))
                     .forEach(player -> names.add(player.getName()));
         }
 
