@@ -5,6 +5,8 @@ import fun.aevy.aevycore.utils.configuration.elements.ConfigType;
 import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 import fun.aevy.aevycore.utils.formatting.Send;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public abstract class AevyDependent extends JavaPlugin
     protected CoolConfig    coolConfig, aevyConfig;
     protected Send          send, aevySend;
 
-    private List<Reloadable>        reloadables;
+    private List<Reloadable> reloadables;
 
     /**
      * Constructor for AevyDependent.
@@ -40,6 +42,8 @@ public abstract class AevyDependent extends JavaPlugin
         aevySend    = aevyCore.getSend();
 
         coolConfig  = new CoolConfig(currentPlugin, ConfigType.DEFAULT);
+        coolConfig.addResources(aevyCore);
+
         send        = new Send(coolConfig);
         reloadables = new ArrayList<>();
     }
@@ -59,28 +63,29 @@ public abstract class AevyDependent extends JavaPlugin
      * Sends an error message to the console.
      * @param message Error message to send.
      */
-    public void errorMessage(String message)
+    public void errorMessage(String message, Object ...args)
     {
-        getLogger().severe(message);
+        getLogger().severe(String.format(message, args));
     }
 
     /**
      * Sends a warning message to the console.
      * @param message Warning message to send.
      */
-    public void warningMessage(String message)
+    public void warningMessage(String message, Object ...args)
     {
-        getLogger().warning(message);
+        getLogger().warning(String.format(message, args));
     }
 
-    public void infoMessage(String message)
+    public void infoMessage(String message, Object ...args)
     {
-        getLogger().info(message);
+        getLogger().info(String.format(message, args));
     }
 
     public void addReloadable(Reloadable reloadable)
     {
         reloadables.add(reloadable);
+        reloadReloadable(reloadable);
     }
 
     public void reloadReloadable(Reloadable reloadable)
@@ -96,6 +101,11 @@ public abstract class AevyDependent extends JavaPlugin
     public void removeReloadable(Reloadable reloadable)
     {
         reloadables.remove(reloadable);
+    }
+
+    public static void callEvent(Event event)
+    {
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
 }

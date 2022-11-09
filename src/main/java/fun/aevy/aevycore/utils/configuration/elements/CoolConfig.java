@@ -1,8 +1,9 @@
 package fun.aevy.aevycore.utils.configuration.elements;
 
+import fun.aevy.aevycore.utils.AnnotationUtils;
+import fun.aevy.aevycore.utils.configuration.elements.annotations.Resource;
 import fun.aevy.aevycore.utils.formatting.MessageProperties;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Creates a new configuration manager. An empty HashMap is automatically provided.
@@ -21,12 +23,10 @@ import java.util.List;
 public class CoolConfig
 {
     protected final JavaPlugin  javaPlugin;
+    protected final Logger      logger;
     protected FileConfiguration fileConfiguration;
 
     protected HashMap<Enum<?>, ConfigEntry> entries;
-
-    @Setter
-    protected String tempPath;
 
     /**
      * Creates a new empty coolConfig.
@@ -37,6 +37,7 @@ public class CoolConfig
     public CoolConfig(JavaPlugin javaPlugin, ConfigType configType)
     {
         this.javaPlugin     = javaPlugin;
+        logger              = javaPlugin.getLogger();
         entries             = new HashMap<>();
         fileConfiguration   = null;
 
@@ -51,6 +52,8 @@ public class CoolConfig
                 fileConfiguration   = YamlConfiguration.loadConfiguration(file);
             }
         }
+
+        addResources(javaPlugin);
     }
 
     /**
@@ -117,7 +120,7 @@ public class CoolConfig
     /**
      * Retrieves the path of the {@link ConfigEntry} correspondent to the Enum
      * @param e The enum to be searched.
-     * @return  The {@link ConfigEntry#getPath()}.
+     * @return The {@link ConfigEntry#getPath()}.
      * @since 1.0
      */
     public String getPath(Enum<?> e)
@@ -125,53 +128,74 @@ public class CoolConfig
         return get(e).getPath();
     }
 
+    public void addResources(JavaPlugin javaPlugin)
+    {
+        AnnotationUtils.Action action = (annotation, classFound) ->
+        {
+            Resource resource = (Resource) annotation;
+
+            for (Object object : classFound.getEnumConstants())
+            {
+                if (!(object instanceof Enum))
+                {
+                    continue;
+                }
+
+                add((Enum<?>) object, resource.path());
+                logger.info(String.format("Added new entry of %s (%s)", object, resource.path()));
+            }
+        };
+
+        logger.info(String.format("Scanning with %s", javaPlugin.getClass()));
+
+        AnnotationUtils.forEachAnnotation(Resource.class, action, javaPlugin);
+    }
+
     /**
      * Assembles part of the given path with the Enum's name, then it creates and puts a new entry
      * in the HashMap.
-     * @param enums The enum to be added.
+     * @param e         The enum to be added.
+     * @param tempPath  The path in the config.
      * @since 1.0
      */
-    public void add(Enum<?>... enums)
+    public void add(Enum<?> e, String tempPath)
     {
-        for (Enum<?> e : enums)
+        String prefix   = getCurrentPrefix();
+        String newPath  = tempPath + "." + e.name();
+        Object value    = fileConfiguration.get(newPath);
+
+        boolean entryWithPrefix         = entryHasPrefix(value);
+        MessageProperties properties    = null;
+        ConfigEntry newEntry;
+
+        if (value instanceof String)
         {
-            String prefix   = getCurrentPrefix();
-            String newPath  = tempPath + "." + e.name();
-            Object value    = fileConfiguration.get(newPath);
+            properties  = new MessageProperties((String) value);
+            newEntry    = new ConfigEntry(tempPath, value, properties, true);
+        }
+        else if (value instanceof ArrayList)
+        {
+            properties  = new MessageProperties((List<String>) value);
+            newEntry    = new ConfigEntry(tempPath, value, properties, true);
+        }
+        else
+        {
+            newEntry = new ConfigEntry(tempPath, value, null, false);
+        }
 
-            boolean entryWithPrefix         = entryHasPrefix(value);
-            MessageProperties properties    = null;
-            ConfigEntry newEntry;
-
-            if (value instanceof String)
+        if (properties != null)
+        {
+            if (entryWithPrefix)
             {
-                properties  = new MessageProperties((String) value);
-                newEntry    = new ConfigEntry(tempPath, value, properties, true);
-            }
-            else if (value instanceof ArrayList)
-            {
-                properties  = new MessageProperties((List<String>) value);
-                newEntry    = new ConfigEntry(tempPath, value, properties, true);
+                properties.withPrefix(prefix);
             }
             else
             {
-                newEntry = new ConfigEntry(tempPath, value, null, false);
+                properties.noPrefix();
             }
-
-            if (properties != null)
-            {
-                if (entryWithPrefix)
-                {
-                    properties.withPrefix(prefix);
-                }
-                else
-                {
-                    properties.noPrefix();
-                }
-            }
-
-            entries.put(e, newEntry);
         }
+
+        entries.put(e, newEntry);
     }
 
     private boolean entryHasPrefix(Object object)

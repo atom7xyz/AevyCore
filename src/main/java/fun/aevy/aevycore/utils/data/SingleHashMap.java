@@ -4,10 +4,6 @@ import java.util.HashMap;
 
 public class SingleHashMap<K> extends HashMap<K, K>
 {
-    public SingleHashMap()
-    {
-
-    }
 
     public K put(K key)
     {

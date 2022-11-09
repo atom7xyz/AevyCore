@@ -46,7 +46,7 @@ public abstract class Scheduler implements Reloadable
         this.bukkitScheduler    = javaPlugin.getServer().getScheduler();
         this.prefix             = "Scheduler: ";
 
-        aevyCore.getCanReload().add(this);
+        aevyCore.addReloadable(this);
         reloadVars();
     }
 
@@ -183,7 +183,11 @@ public abstract class Scheduler implements Reloadable
     public void cancel()
     {
         removeReloadable();
-        bukkitTask.cancel();
+
+        if (bukkitTask != null)
+        {
+            bukkitTask.cancel();
+        }
     }
 
     private void removeReloadable()

@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.logging.Logger;
+
 /**
  * Utility class used to send formatted messages to {@link CommandSender}s.
  * @since 1.5
@@ -52,6 +54,19 @@ public class Send
         }
     }
 
+    public static void broadcast(MessageProperties properties, Player except, boolean consoleToo)
+    {
+        Bukkit.getOnlinePlayers()
+                .stream()
+                .filter(player -> !player.equals(except))
+                .forEach(player -> message(player, properties));
+
+        if (consoleToo)
+        {
+            System.out.println(properties.getActualMessage());
+        }
+    }
+
     public static void actionBar(Player player, MessageProperties properties)
     {
         ActionBarAPI.sendActionBar(player, properties.getMessage());
@@ -75,6 +90,29 @@ public class Send
     private static boolean isHuman(CommandSender sender)
     {
         return sender instanceof Player;
+    }
+
+    /**
+     * Sends an error message to the console.
+     * @param message Error message to send.
+     */
+    public static void errorMessage(Logger logger, String message, Object ...args)
+    {
+        logger.severe(String.format(message, args));
+    }
+
+    /**
+     * Sends a warning message to the console.
+     * @param message Warning message to send.
+     */
+    public static void warningMessage(Logger logger, String message, Object ...args)
+    {
+        logger.warning(String.format(message, args));
+    }
+
+    public static void infoMessage(Logger logger, String message, Object ...args)
+    {
+        logger.info(String.format(message, args));
     }
 
 }

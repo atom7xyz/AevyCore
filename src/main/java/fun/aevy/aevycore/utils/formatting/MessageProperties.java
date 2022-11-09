@@ -78,7 +78,7 @@ public class MessageProperties
 
     public MessageProperties replace(String toReplace, Object replacement)
     {
-        if (primitiveMessage == null && primitiveList == null)
+        if (primitivesAreNull())
         {
             return this;
         }
@@ -100,7 +100,7 @@ public class MessageProperties
 
     public MessageProperties replace(int index, String toReplace, String replacement)
     {
-        if (primitiveMessage == null && primitiveList == null)
+        if (primitivesAreNull())
         {
             return this;
         }
@@ -118,16 +118,16 @@ public class MessageProperties
         return this;
     }
 
-    public MessageProperties replace(String[] toReplace, Object[] replacements)
+    public MessageProperties replace(String[] toReplace, Object... replacements)
     {
-        if (primitiveMessage == null && primitiveList == null)
+        if (primitivesAreNull())
         {
             return this;
         }
 
-        int length = toReplace.length;
-
+        int length              = toReplace.length;
         String[] strReplacement = new String[length];
+
         for (int i = 0; i < length; i++)
         {
             strReplacement[i] = String.valueOf(replacements[i]);
@@ -157,16 +157,16 @@ public class MessageProperties
         return this;
     }
 
-    public MessageProperties replace(int index, String[] toReplace, Object[] replacements)
+    public MessageProperties replace(int index, String[] toReplace, Object... replacements)
     {
-        if (primitiveMessage == null && primitiveList == null)
+        if (primitivesAreNull())
         {
             return this;
         }
 
-        int length = toReplace.length;
-
+        int length              = toReplace.length;
         String[] strReplacement = new String[length];
+
         for (int i = 0; i < length; i++)
         {
             strReplacement[i] = String.valueOf(replacements[i]);
@@ -174,14 +174,14 @@ public class MessageProperties
 
         if (primitiveMessage == null)
         {
-            for (int i = 0; i < toReplace.length; i++)
+            for (int i = 0; i < length; i++)
             {
                 replace(index, toReplace[i], strReplacement[i]);
             }
         }
         else
         {
-            for (int i = 0; i < toReplace.length; i++)
+            for (int i = 0; i < length; i++)
             {
                 replace(index, toReplace[i], strReplacement[i]);
             }
@@ -236,4 +236,10 @@ public class MessageProperties
     {
         return actualList;
     }
+
+    private boolean primitivesAreNull()
+    {
+        return primitiveMessage == null && primitiveList == null;
+    }
+
 }

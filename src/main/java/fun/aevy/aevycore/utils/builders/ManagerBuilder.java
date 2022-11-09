@@ -104,14 +104,14 @@ public abstract class ManagerBuilder<G, N>
     }
 
     /**
-     * Searches an item using {@link Lambda#expression(Object)} in the set and returns it.
-     * @param lambda The expression.
+     * Searches an item using {@link ManagerBuilder.Action#expression(Object)} in the set and returns it.
+     * @param action The expression.
      * @return The item that has been found.
      * @since 1.3
      */
-    public <K> G getItem(@NotNull Lambda lambda)
+    public <K> G getItem(@NotNull Action action)
     {
-        return set.stream().filter(lambda::expression).findAny().orElse(null);
+        return set.stream().filter(action::expression).findAny().orElse(null);
     }
 
     /**
@@ -155,6 +155,11 @@ public abstract class ManagerBuilder<G, N>
     public void removeMap(G genericKey)
     {
         map.remove(genericKey);
+    }
+
+    public interface Action
+    {
+        <G> boolean expression(@NotNull G g);
     }
 
 }

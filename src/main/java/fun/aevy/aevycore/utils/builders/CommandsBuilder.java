@@ -260,7 +260,7 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
 
         if (aevyDependent == null)
         {
-            aevyCore.getCanReload().add(this);
+            aevyCore.addReloadable(this);
         }
         else
         {
@@ -270,10 +270,10 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
 
     public void reloadDefaults()
     {
-        noPlayer        = coolConfig.getProperties(Aevy.Global.NO_PLAYER);
-        noConsole       = coolConfig.getProperties(Aevy.Global.NO_CONSOLE);
-        noPerms         = coolConfig.getProperties(Aevy.Global.NO_PERMS);
-        unknownPlayer   = coolConfig.getProperties(Aevy.Global.UNKNOWN_PLAYER);
+        noPlayer        = coolConfig.getProperties(Aevy.Messages.NO_PLAYER);
+        noConsole       = coolConfig.getProperties(Aevy.Messages.NO_CONSOLE);
+        noPerms         = coolConfig.getProperties(Aevy.Messages.NO_PERMS);
+        unknownPlayer   = coolConfig.getProperties(Aevy.Messages.UNKNOWN_PLAYER);
     }
 
 }

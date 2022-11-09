@@ -4,12 +4,15 @@ import fun.aevy.aevycore.commands.AevyCommand;
 import fun.aevy.aevycore.struct.elements.Reloadable;
 import fun.aevy.aevycore.struct.elements.database.Database;
 import fun.aevy.aevycore.struct.elements.database.DatabaseConnection;
+import fun.aevy.aevycore.struct.elements.events.EventListener;
 import fun.aevy.aevycore.struct.manager.DatabasesManager;
 import fun.aevy.aevycore.utils.configuration.elements.ConfigType;
 import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 import fun.aevy.aevycore.utils.configuration.entries.Aevy;
 import fun.aevy.aevycore.utils.formatting.Send;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,7 +41,7 @@ public final class AevyCore extends JavaPlugin
     private CoolConfig  coolConfig;
     private Send        send;
 
-    private List<Reloadable> canReload;
+    private List<Reloadable> reloadables;
 
     @Override
     public void onEnable()
@@ -48,43 +51,12 @@ public final class AevyCore extends JavaPlugin
 
         coolConfig  = new CoolConfig(this, ConfigType.DEFAULT);
         send        = new Send(coolConfig);
-        canReload   = new ArrayList<>();
-
-        coolConfig.setTempPath("permissions");
-        coolConfig.add(Aevy.Perms.RELOAD);
-
-        coolConfig.setTempPath("messages");
-        coolConfig.add(Aevy.Messages.PREFIX);
-        coolConfig.add(Aevy.Global.NO_PERMS);
-        coolConfig.add(Aevy.Global.NO_PLAYER);
-        coolConfig.add(Aevy.Global.NO_CONSOLE);
-        coolConfig.add(Aevy.Global.UNKNOWN_PLAYER);
-
-        coolConfig.setTempPath("messages.commands.aevy");
-        coolConfig.add(Aevy.Messages.RELOAD);
-        coolConfig.add(Aevy.Messages.VERSION);
-
-        coolConfig.setTempPath("messages.usages");
-        coolConfig.add(Aevy.Usages.AEVY);
-
-        coolConfig.setTempPath("database");
-        coolConfig.add(Aevy.Database.ENABLED);
+        reloadables = new ArrayList<>();
 
         databaseEnabled = (Boolean) coolConfig.getValue(Aevy.Database.ENABLED);
+        
         if (databaseEnabled)
         {
-            coolConfig.add(Aevy.Database.DATABASE);
-            coolConfig.add(Aevy.Database.DRIVER);
-            coolConfig.add(Aevy.Database.URL);
-            coolConfig.add(Aevy.Database.IP);
-            coolConfig.add(Aevy.Database.PORT);
-            coolConfig.add(Aevy.Database.USER);
-            coolConfig.add(Aevy.Database.PASSWORD);
-            coolConfig.add(Aevy.Database.MAX_POOL_SIZE);
-            coolConfig.add(Aevy.Database.DEBUG);
-            coolConfig.add(Aevy.Database.USE_DEFAULTS);
-            coolConfig.add(Aevy.Database.PROPERTIES);
-
             databasesManager = new DatabasesManager(this);
 
             DatabaseConnection databaseConnection = new DatabaseConnection(coolConfig);
@@ -105,6 +77,8 @@ public final class AevyCore extends JavaPlugin
                 .setUsage(Aevy.Usages.AEVY)
                 .setTabComplete(true)
                 .build();
+
+        new EventListener(this);
     }
 
     @Override
@@ -128,4 +102,29 @@ public final class AevyCore extends JavaPlugin
         return aevyCore;
     }
 
+    public void callEvent(Event event)
+    {
+        Bukkit.getServer().getPluginManager().callEvent(event);
+    }
+
+    public void addReloadable(Reloadable reloadable)
+    {
+        reloadables.add(reloadable);
+        reloadReloadable(reloadable);
+    }
+
+    public void reloadReloadable(Reloadable reloadable)
+    {
+        reloadable.reloadVars();
+    }
+
+    public void reloadReloadables()
+    {
+        reloadables.forEach(this::reloadReloadable);
+    }
+
+    public void removeReloadable(Reloadable reloadable)
+    {
+        reloadables.remove(reloadable);
+    }
 }

@@ -12,12 +12,12 @@ public class Shortcuts
 
     /**
      * Colors the message.
-     * @param message Message to be colored.
-     * @return The colored message.
+     * @param message Message to be colored and formatted.
+     * @return The colored and formatted message.
      */
-    public static String color(String message)
+    public static String color(String message, Object ...args)
     {
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return ChatColor.translateAlternateColorCodes('&', String.format(message, args));
     }
 
 }

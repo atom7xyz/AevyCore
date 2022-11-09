@@ -1,5 +1,6 @@
 package fun.aevy.aevycore.utils.builders;
 
+import fun.aevy.aevycore.AevyCore;
 import fun.aevy.aevycore.struct.elements.AevyDependent;
 import fun.aevy.aevycore.struct.elements.Reloadable;
 import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
@@ -15,6 +16,7 @@ import org.bukkit.plugin.PluginManager;
  */
 public abstract class ListenerBuilder implements Listener, Reloadable
 {
+    protected final AevyCore        aevyCore;
     protected final AevyDependent   aevyDependent;
     protected final PluginManager   pluginManager;
     protected final CoolConfig      coolConfig;
@@ -26,6 +28,7 @@ public abstract class ListenerBuilder implements Listener, Reloadable
      */
     public ListenerBuilder(AevyDependent aevyDependent)
     {
+        this.aevyCore       = null;
         this.aevyDependent  = aevyDependent;
         this.pluginManager  = aevyDependent.getServer().getPluginManager();
         this.coolConfig     = aevyDependent.getCoolConfig();
@@ -38,11 +41,29 @@ public abstract class ListenerBuilder implements Listener, Reloadable
     }
 
     /**
+     * Constructor for new Listeners, which they get automatically registered.
+     * @param aevyCore Instance of the AevyCore plugin.
+     */
+    public ListenerBuilder(AevyCore aevyCore)
+    {
+        this.aevyCore       = aevyCore;
+        this.aevyDependent  = null;
+        this.pluginManager  = aevyCore.getServer().getPluginManager();
+        this.coolConfig     = aevyCore.getCoolConfig();
+        this.send           = aevyCore.getSend();
+
+        aevyCore.addReloadable(this);
+
+        registerEvents();
+        reloadVars();
+    }
+
+    /**
      * Registers new events, bound to this class.
      */
     public void registerEvents()
     {
-        pluginManager.registerEvents(this, aevyDependent);
+        pluginManager.registerEvents(this, aevyDependent == null ? aevyCore : aevyDependent);
     }
 
     /**

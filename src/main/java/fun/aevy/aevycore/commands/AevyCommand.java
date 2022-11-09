@@ -1,7 +1,7 @@
 package fun.aevy.aevycore.commands;
 
 import fun.aevy.aevycore.AevyCore;
-import fun.aevy.aevycore.struct.elements.Reloadable;
+import fun.aevy.aevycore.struct.elements.events.ConfigReloadEvent;
 import fun.aevy.aevycore.utils.builders.CommandsBuilder;
 import fun.aevy.aevycore.utils.configuration.entries.Aevy;
 import fun.aevy.aevycore.utils.formatting.MessageProperties;
@@ -47,8 +47,7 @@ public class AevyCommand extends CommandsBuilder
                 {
                     if (commandSender.hasPermission(reloadPerm))
                     {
-                        aevyCore.getCoolConfig().reload();
-                        aevyCore.getCanReload().forEach(Reloadable::reloadVars);
+                        aevyCore.callEvent(new ConfigReloadEvent(aevyDependent));
                         Send.message(commandSender, reload);
                     }
                     else
@@ -96,10 +95,10 @@ public class AevyCommand extends CommandsBuilder
 
         setUsage(Aevy.Usages.AEVY);
 
-        reload  = coolConfig.getProperties(Aevy.Messages.RELOAD);
-        version = coolConfig.getProperties(Aevy.Messages.VERSION);
+        reload  = coolConfig.getProperties(Aevy.CommandAevy.RELOAD);
+        version = coolConfig.getProperties(Aevy.CommandAevy.VERSION);
 
-        version.replace(new String[] { "{ver}", "{hash}", "{site}" }, new String[] { plVers, fileHash, plSite });
+        version.replace(new String[] { "{ver}", "{hash}", "{site}" }, plVers, fileHash, plSite);
 
         reloadPerm = (String) coolConfig.getValue(Aevy.Perms.RELOAD);
     }

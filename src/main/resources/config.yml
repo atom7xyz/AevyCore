@@ -1,25 +1,30 @@
 permissions:
   RELOAD: "aevycore.reload"
+
 messages:
   PREFIX: "&b AevyCore &7»"
   NO_PERMS: "{prefix} &cYou can't execute this command!"
   NO_PLAYER: "{prefix} &cYou can't execute this command as a player!"
   NO_CONSOLE: "{prefix} &cYou can't execute this command as the console!"
   UNKNOWN_PLAYER: "{prefix} &cThe player does not exist!"
-  commands:
-    aevy:
-      RELOAD: "{prefix} &aConfiguration has been reloaded!"
-      VERSION:
-        - " "
-        - "{prefix} v{ver} ({hash})"
-        - "{prefix} made by &cSorridi &7- &c{site}"
-        - " "
+
+aevycore:
+
   usages:
     AEVY:
       - " "
       - "&b/aevy version &7» &fShow version in use."
       - "&b/aevy reload &7» &fReload configuration."
       - " "
+
+  aevy-command:
+    RELOAD: "{prefix} &aConfiguration has been reloaded!"
+    VERSION:
+      - " "
+      - "{prefix} v{ver} ({hash})"
+      - "{prefix} made by &cSorridi &7- &c{site}"
+      - " "
+
 database:
   ENABLED: false
   DRIVER: "org.mariadb.jdbc.Driver"
@@ -28,7 +33,7 @@ database:
   PORT: "3306"
   USER: "root"
   PASSWORD: "root"
-  DATABASE: "aevy-core"
+  DATABASE: "aevy_core"
   MAX_POOL_SIZE: 6
   DEBUG: true
   PROPERTIES: []
