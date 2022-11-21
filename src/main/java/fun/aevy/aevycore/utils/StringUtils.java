@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class StringUtils
 {
-    private static DecimalFormat singleDigitFormat  = new DecimalFormat("0.0");
-    private static DecimalFormat doubleDigitFormat  = new DecimalFormat("0.00");
+    private static final DecimalFormat singleDigitFormat  = new DecimalFormat("0.0");
+    private static final DecimalFormat doubleDigitFormat  = new DecimalFormat("0.00");
 
     /**
      * Converts minutes in String, using HH:mm format.
@@ -171,11 +171,21 @@ public class StringUtils
         return NumberUtils.isNumber(string);
     }
 
+    /**
+     * Converts a double into a String, using the format 0.0.
+     * @param value The value to be converted.
+     * @return The converted value.
+     */
     public static String formatSingle(double value)
     {
         return singleDigitFormat.format(value);
     }
 
+    /**
+     * Converts a double into a String, using the format 0.00.
+     * @param value The value to be converted.
+     * @return The converted value.
+     */
     public static String formatDouble(double value)
     {
         return doubleDigitFormat.format(value);

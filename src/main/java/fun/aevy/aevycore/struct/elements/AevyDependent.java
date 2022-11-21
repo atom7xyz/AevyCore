@@ -77,32 +77,55 @@ public abstract class AevyDependent extends JavaPlugin
         getLogger().warning(String.format(message, args));
     }
 
+    /**
+     * Sends a message to the console.
+     * @param message Message to send.
+     */
     public void infoMessage(String message, Object ...args)
     {
         getLogger().info(String.format(message, args));
     }
 
+    /**
+     * Registers a reloadable.
+     * @param reloadable Reloadable to register.
+     */
     public void addReloadable(Reloadable reloadable)
     {
         reloadables.add(reloadable);
         reloadReloadable(reloadable);
     }
 
+    /**
+     * Reloads a reloadable.
+     * @param reloadable Reloadable to reload.
+     */
     public void reloadReloadable(Reloadable reloadable)
     {
         reloadable.reloadVars();
     }
 
+    /**
+     * Reloads all reloadables.
+     */
     public void reloadReloadables()
     {
         reloadables.forEach(this::reloadReloadable);
     }
 
+    /**
+     * Removes a reloadable.
+     * @param reloadable Reloadable to remove.
+     */
     public void removeReloadable(Reloadable reloadable)
     {
         reloadables.remove(reloadable);
     }
 
+    /**
+     * Calls a new {@link Event}.
+     * @param event Event to call.
+     */
     public static void callEvent(Event event)
     {
         Bukkit.getServer().getPluginManager().callEvent(event);

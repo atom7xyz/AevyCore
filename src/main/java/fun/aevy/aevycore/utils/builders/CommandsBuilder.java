@@ -213,42 +213,75 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         return getDefaultTabList(args);
     }
 
+    /**
+     * Sets if the command can only be executed by a player.
+     * @param value The value to set.
+     * @return The instance of the command.
+     */
     public CommandsBuilder setOnlyPlayers(boolean value)
     {
         onlyPlayer = value;
         return this;
     }
 
+    /**
+     * Sets if the command can only be executed by the console.
+     * @param value The value to set.
+     * @return The instance of the command.
+     */
     public CommandsBuilder setOnlyConsole(boolean value)
     {
         onlyConsole = value;
         return this;
     }
 
+    /**
+     * Sets if the command has a usage message.
+     * @param value The value to set.
+     * @return The instance of the command.
+     */
     public CommandsBuilder setTabComplete(boolean value)
     {
         tabComplete = value;
         return this;
     }
 
+    /**
+     * Sets the usage of the command.
+     * @param e The enum of the configuration message.
+     * @return The instance of the command.
+     */
     public CommandsBuilder setUsage(Enum<?> e)
     {
         this.usage = coolConfig.getProperties(e);
         return this;
     }
 
+    /**
+     * Sets the permission needed to execute the command.
+     * @param message The permission needed.
+     * @return The instance of the command.
+     */
     public CommandsBuilder setPermission(String message)
     {
         this.permission = message;
         return this;
     }
 
+    /**
+     * Sets the permission needed to execute the command.
+     * @param e The enum of the configuration message.
+     * @return The instance of the command.
+     */
     public CommandsBuilder setPermission(Enum<?> e)
     {
         this.permission = (String) coolConfig.getValue(e);
         return this;
     }
 
+    /**
+     * Builds the command.
+     */
     public void build()
     {
         plugin.getCommand(command).setExecutor(this);
@@ -268,6 +301,9 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         }
     }
 
+    /**
+     * Reloads the default messages.
+     */
     public void reloadDefaults()
     {
         noPlayer        = coolConfig.getProperties(Aevy.Messages.NO_PLAYER);

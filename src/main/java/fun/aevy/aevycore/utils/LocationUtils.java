@@ -146,7 +146,13 @@ public class LocationUtils
         return location;
     }
 
-    public static Location getMiddleLocation(Location location)
+    /**
+     * Gets the middle of a location.
+     * @param location  The location to get the middle from.
+     * @param yawPitch  If the yaw and pitch should be the same as the original location (true) or not (false).
+     * @return The middle of the location.
+     */
+    public static Location getMiddleLocation(Location location, boolean yawPitch)
     {
         World world = location.getWorld();
 
@@ -154,10 +160,17 @@ public class LocationUtils
         double y = location.getY();
         double z = location.getBlockZ() + .5;
 
-        float yaw   = location.getYaw();
-        float pitch = location.getPitch();
+        if (yawPitch)
+        {
+            float yaw   = location.getYaw();
+            float pitch = location.getPitch();
 
-        return new Location(world, x, y, z, yaw, pitch);
+            return new Location(world, x, y, z, yaw, pitch);
+        }
+        else
+        {
+            return new Location(world, x, y, z);
+        }
     }
 
 }

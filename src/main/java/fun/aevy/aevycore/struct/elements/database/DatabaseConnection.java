@@ -14,6 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents a database connection.
+ * @since 1.4
+ * @author Sorridi
+ */
 @Getter
 public class DatabaseConnection
 {
@@ -25,6 +30,19 @@ public class DatabaseConnection
 
     private final Map<String, String> properties;
 
+    /**
+     * Creates a new DatabaseConnection.
+     * @param ip            The ip.
+     * @param port          The port.
+     * @param database      The database.
+     * @param user          The user.
+     * @param password      The password.
+     * @param url           The url.
+     * @param driver        The driver.
+     * @param properties    The properties.
+     * @param useDefaults   Whether to use defaults.
+     * @param poolSize      The pool size (default: CPUS * 2).
+     */
     public DatabaseConnection(
             @NotNull    String              ip,
             @NotNull    String              port,
@@ -51,6 +69,10 @@ public class DatabaseConnection
         initialize();
     }
 
+    /**
+     * Creates a new DatabaseConnection instance from a CoolConfig instance.
+     * @param coolConfig The CoolConfig instance to use.
+     */
     public DatabaseConnection(CoolConfig coolConfig)
     {
         this.ip             = (String) coolConfig.getValue(Aevy.Database.IP);
@@ -74,6 +96,9 @@ public class DatabaseConnection
         initialize();
     }
 
+    /**
+     * Initialize the connection.
+     */
     private void initialize()
     {
         HikariConfig hikariConfig = new HikariConfig();
@@ -98,6 +123,11 @@ public class DatabaseConnection
         dataSource = new HikariDataSource(hikariConfig);
     }
 
+    /**
+     * Closes the connections.
+     * @param connections   The connections to close.
+     * @param <G>           The type of the connections.
+     */
     @SafeVarargs
     @SneakyThrows
     public final <G extends AutoCloseable> void close(@Nullable G... connections)

@@ -6,6 +6,11 @@ import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Event called when a reload request is sent.
+ * @since 1.7
+ * @author Sorridi
+ */
 @Getter
 public class ConfigReloadEvent extends Event
 {
@@ -14,12 +19,20 @@ public class ConfigReloadEvent extends Event
     private final AevyDependent aevyDependent;
     private final AevyCore      aevyCore;
 
+    /**
+     * Constructor.
+     * @param aevyDependent The AevyDependent instance that sent the reload request.
+     */
     public ConfigReloadEvent(AevyDependent aevyDependent)
     {
         this.aevyDependent  = aevyDependent;
         this.aevyCore       = null;
     }
 
+    /**
+     * Constructor.
+     * @param aevyCore The AevyCore instance that sent the reload request.
+     */
     public ConfigReloadEvent(AevyCore aevyCore)
     {
         this.aevyDependent  = null;

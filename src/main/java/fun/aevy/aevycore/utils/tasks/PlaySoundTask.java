@@ -10,11 +10,22 @@ import org.bukkit.entity.Player;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Task for playing a sound to a player.
+ * @author Sorridi
+ * @since 1.0
+ */
 public class PlaySoundTask extends Scheduler
 {
-
     private int toRepeatFor;
 
+    /**
+     * Creates a new {@link PlaySoundTask}.
+     * @param aevyDependent The {@link AevyDependent} instance.
+     * @param delay         The delay.
+     * @param repeat        The repeat time.
+     * @param toRepeatFor   The amount of times to repeat.
+     */
     public PlaySoundTask(AevyDependent aevyDependent, int delay, int repeat, int toRepeatFor)
     {
         super(aevyDependent);
@@ -29,6 +40,12 @@ public class PlaySoundTask extends Scheduler
         this.toRepeatFor = toRepeatFor;
     }
 
+    /**
+     * Creates a new {@link PlaySoundTask}.
+     * @param aevyDependent The {@link AevyDependent} instance.
+     * @param repeat        The repeat time.
+     * @param toRepeatFor   The amount of times to repeat.
+     */
     public PlaySoundTask(AevyDependent aevyDependent, int repeat, int toRepeatFor)
     {
         super(aevyDependent);
@@ -43,6 +60,9 @@ public class PlaySoundTask extends Scheduler
         this.toRepeatFor = toRepeatFor;
     }
 
+    /**
+     * Decrements the time to repeat the sound for.
+     */
     private void dec()
     {
         if (--toRepeatFor <= 0)
@@ -51,6 +71,11 @@ public class PlaySoundTask extends Scheduler
         }
     }
 
+    /**
+     * Plays a sound to a player.
+     * @param player    Player to play the sound to.
+     * @param sound     Sound to play.
+     */
     public void runTask(Player player, Sound sound)
     {
         runTask(() ->
@@ -60,6 +85,12 @@ public class PlaySoundTask extends Scheduler
         });
     }
 
+    /**
+     * Plays a sound to a player.
+     * @param player    Player to play the sound to.
+     * @param sound     Sound to play.
+     * @param volume    Volume of the sound.
+     */
     public void runTask(Player player, Sound sound, int volume)
     {
         runTask(() ->
@@ -69,6 +100,13 @@ public class PlaySoundTask extends Scheduler
         });
     }
 
+    /**
+     * Plays a sound to a player.
+     * @param player    Player to play the sound to.
+     * @param sound     Sound to play.
+     * @param volume    Volume of the sound.
+     * @param pitch     Pitch of the sound.
+     */
     public void runTask(Player player, Sound sound, int volume, int pitch)
     {
         runTask(() ->
@@ -78,6 +116,12 @@ public class PlaySoundTask extends Scheduler
         });
     }
 
+    /**
+     * Plays a sound to a player.
+     * @param player    Player to play the sound to.
+     * @param sound     Sound to play.
+     * @param location  Location to play the sound at.
+     */
     public void runTask(Player player, Sound sound, Location location)
     {
         runTask(() ->
@@ -87,6 +131,14 @@ public class PlaySoundTask extends Scheduler
         });
     }
 
+    /**
+     * Plays a sound to a player.
+     * @param player    Player to play the sound to.
+     * @param sound     Sound to play.
+     * @param volume    Volume of the sound.
+     * @param pitch     Pitch of the sound.
+     * @param location  Location to play the sound at.
+     */
     public void runTask(Player player, Sound sound, int volume, int pitch, Location location)
     {
         runTask(() ->
@@ -96,6 +148,11 @@ public class PlaySoundTask extends Scheduler
         });
     }
 
+    /**
+     * Plays a sound to an entity.
+     * @param entity    Entity to play the sound to.
+     * @param sound     Sound to play.
+     */
     public void runTask(Sound sound, Entity entity, int range)
     {
         runTask(() ->
@@ -105,6 +162,12 @@ public class PlaySoundTask extends Scheduler
         });
     }
 
+    /**
+     * Plays a sound to an entity.
+     * @param entity    Entity to play the sound to.
+     * @param sound     Sound to play.
+     * @param volume    Volume of the sound.
+     */
     public void runTask(Sound sound, Entity entity, int volume, int pitch, int range)
     {
         runTask(() ->
@@ -114,6 +177,13 @@ public class PlaySoundTask extends Scheduler
         });
     }
 
+    /**
+     * Plays a sound to an entity.
+     * @param entity    Entity to play the sound to.
+     * @param sound     Sound to play.
+     * @param volume    Volume of the sound.
+     * @param pitch     Pitch of the sound.
+     */
     public void runTask(Location location, Sound sound, Entity entity, int range)
     {
         runTask(() ->
@@ -123,6 +193,13 @@ public class PlaySoundTask extends Scheduler
         });
     }
 
+    /**
+     * Plays a sound to an entity.
+     * @param entity    Entity to play the sound to.
+     * @param sound     Sound to play.
+     * @param volume    Volume of the sound.
+     * @param pitch     Pitch of the sound.
+     */
     public void runTask(Location location, Sound sound, Entity entity, int volume, int pitch, int range)
     {
         runTask(() ->

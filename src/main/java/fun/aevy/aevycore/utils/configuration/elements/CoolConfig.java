@@ -4,6 +4,7 @@ import fun.aevy.aevycore.utils.AnnotationUtils;
 import fun.aevy.aevycore.utils.configuration.elements.annotations.Resource;
 import fun.aevy.aevycore.utils.formatting.MessageProperties;
 import lombok.Getter;
+import lombok.val;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -128,6 +129,10 @@ public class CoolConfig
         return get(e).getPath();
     }
 
+    /**
+     * Adds a new {@link ConfigEntry} using {@link AnnotationUtils}.
+     * @param javaPlugin Instance of the plugin.
+     */
     public void addResources(JavaPlugin javaPlugin)
     {
         AnnotationUtils.Action action = (annotation, classFound) ->
@@ -198,19 +203,24 @@ public class CoolConfig
         entries.put(e, newEntry);
     }
 
+    /**
+     * Checks if the given object starts with the prefix placeholder.
+     * @param object The object to be checked.
+     * @return {@code true} if the object starts with the prefix placeholder.
+     */
     private boolean entryHasPrefix(Object object)
     {
-         String prefix = "{prefix}";
+        String prefix = "{prefix}";
 
-         if (object instanceof String)
-         {
-             return ((String) object).startsWith(prefix);
-         }
-         else if (object instanceof ArrayList)
-         {
-             return ((ArrayList<?>) object).stream().anyMatch(o -> ((String) o).startsWith(prefix));
-         }
-         return false;
+        if (object instanceof String)
+        {
+         return ((String) object).startsWith(prefix);
+        }
+        else if (object instanceof ArrayList)
+        {
+         return ((ArrayList<?>) object).stream().anyMatch(o -> ((String) o).startsWith(prefix));
+        }
+        return false;
     }
 
     /**
@@ -279,9 +289,8 @@ public class CoolConfig
      */
     public void loadData()
     {
-        HashMap<Enum<?>, ConfigEntry> temp = new HashMap<>();
-
-        String prefix = getCurrentPrefix();
+        val temp        = new HashMap<Enum<?>, ConfigEntry>();
+        String prefix   = getCurrentPrefix();
 
         entries.forEach((e, configEntry) ->
         {

@@ -190,6 +190,9 @@ public abstract class Scheduler implements Reloadable
         }
     }
 
+    /**
+     * Removes the Scheduler from the list of reloadables.
+     */
     private void removeReloadable()
     {
         if (aevyDependent != null)

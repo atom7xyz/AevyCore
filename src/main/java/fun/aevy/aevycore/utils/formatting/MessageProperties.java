@@ -3,190 +3,176 @@ package fun.aevy.aevycore.utils.formatting;
 import fun.aevy.aevycore.utils.Shortcuts;
 import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 import lombok.Getter;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
 public class MessageProperties
 {
-    private String  primitiveMessage, prefix, actualMessage;
+    private String prefix;
     private boolean prefixed;
 
-    private List<String> primitiveList, actualList;
+    private String          primitiveMessage, actualMessage;
+    private List<String>    primitiveList, actualList;
 
-    public MessageProperties(String primitiveMessage)
+    private Type type;
+
+    public MessageProperties(@NotNull String string)
     {
-        if (primitiveMessage == null)
-        {
-            this.primitiveMessage   = "";
-            this.actualMessage      = "";
-        }
-        else
-        {
-            this.primitiveMessage   = primitiveMessage;
-            this.actualMessage      = primitiveMessage;
-        }
+        initWith(string);
     }
 
-    public MessageProperties(List<String> primitiveList)
+    public MessageProperties(@NotNull List<String> primitiveList)
     {
-        if (primitiveList == null)
-        {
-            this.primitiveList   = Collections.emptyList();
-            this.actualList      = Collections.emptyList();
-        }
-        else
-        {
-            this.primitiveList = primitiveList;
-            this.actualList    = primitiveList;
-        }
+        initWith(primitiveList);
     }
 
     public MessageProperties(CoolConfig coolConfig, Enum<?> e)
     {
-        Object object = coolConfig.getValue(e);
-
-        if (object instanceof String)
-        {
-            primitiveMessage    = (String) object;
-            actualMessage       = primitiveMessage;
-        }
-        else
-        {
-            primitiveList   = (List<String>) object;
-            actualList      = primitiveList;
-        }
+        initWith(coolConfig.getValue(e));
     }
 
     public MessageProperties(String primitiveMessage, String prefix)
     {
-        this.primitiveMessage   = primitiveMessage;
-        this.actualMessage      = primitiveMessage;
-        this.prefix             = prefix;
-        this.prefixed           = true;
+        initWith(primitiveMessage, prefix);
     }
 
     public MessageProperties(List<String> value, String prefix)
     {
-        this.primitiveList = value;
-        this.actualList    = value;
-        this.prefix        = prefix;
-        this.prefixed      = true;
+        initWith(value, prefix);
+    }
+
+    private void initWith(Object object)
+    {
+        if (object instanceof String)
+        {
+            this.primitiveMessage   = (String) object;
+            this.actualMessage      = null;
+            this.type               = Type.STRING;
+        }
+        else if (object instanceof List)
+        {
+            this.primitiveList  = (List<String>) object;
+            this.actualList     = null;
+            this.type           = Type.LIST;
+        }
+    }
+
+    private void initWith(Object object, String prefix)
+    {
+        this.prefix     = prefix;
+        this.prefixed   = true;
+
+        initWith(object);
     }
 
     public MessageProperties replace(String toReplace, Object replacement)
     {
-        if (primitivesAreNull())
+        String rep = String.valueOf(replacement);
+
+        switch (type)
         {
-            return this;
+            case STRING:
+            {
+                actualMessage = Shortcuts.color(primitiveMessage.replace(toReplace, rep));
+                break;
+            }
+            case LIST:
+            {
+                actualList = new ArrayList<>(primitiveList);
+                actualList.replaceAll(s -> Shortcuts.color(s.replace(toReplace, rep)));
+                break;
+            }
         }
 
-        String strReplacement = String.valueOf(replacement);
-
-        if (primitiveMessage == null)
-        {
-            List<String> temp = new ArrayList<>(primitiveList);
-            temp.replaceAll(s -> Shortcuts.color(s.replace(toReplace, strReplacement)));
-            actualList = temp;
-        }
-        else
-        {
-            actualMessage = Shortcuts.color(primitiveMessage.replace(toReplace, strReplacement));
-        }
         return this;
     }
 
     public MessageProperties replace(int index, String toReplace, String replacement)
     {
-        if (primitivesAreNull())
+        switch (type)
         {
-            return this;
+            case STRING:
+            {
+                actualMessage = Shortcuts.color(primitiveMessage.replace(toReplace, replacement));
+                break;
+            }
+            case LIST:
+            {
+                actualList.set(index, Shortcuts.color(primitiveList.get(index).replace(toReplace, replacement)));
+                break;
+            }
         }
 
-        String strReplacement = String.valueOf(replacement);
-
-        if (primitiveMessage == null)
-        {
-            actualList.set(index, Shortcuts.color(primitiveList.get(index).replace(toReplace, strReplacement)));
-        }
-        else
-        {
-            actualMessage = Shortcuts.color(primitiveMessage.replace(toReplace, strReplacement));
-        }
         return this;
     }
 
     public MessageProperties replace(String[] toReplace, Object... replacements)
     {
-        if (primitivesAreNull())
+        int length = toReplace.length;
+
+        switch (type)
         {
-            return this;
-        }
-
-        int length              = toReplace.length;
-        String[] strReplacement = new String[length];
-
-        for (int i = 0; i < length; i++)
-        {
-            strReplacement[i] = String.valueOf(replacements[i]);
-        }
-
-        if (primitiveMessage == null)
-        {
-            List<String> temp = new ArrayList<>(primitiveList);
-
-            for (int i = 0; i < length; i++)
+            case STRING:
             {
-                int a = i;
-                temp.replaceAll(s -> Shortcuts.color(s.replace(toReplace[a], strReplacement[a])));
-            }
-            actualList = temp;
-        }
-        else
-        {
-            String temp = primitiveMessage;
+                String temp = primitiveMessage;
 
-            for (int i = 0; i < length; i++)
-            {
-                temp = temp.replace(toReplace[i], strReplacement[i]);
+                for (int i = 0; i < length; i++)
+                {
+                    temp = temp.replace(toReplace[i], replacements[i].toString());
+                }
+                actualMessage = Shortcuts.color(temp);
+                break;
             }
-            actualMessage = Shortcuts.color(temp);
+            case LIST:
+            {
+                val temp = new ArrayList<>(primitiveList);
+
+                for (int i = 0; i < length; i++)
+                {
+                    int a = i;
+                    temp.replaceAll(s -> Shortcuts.color(s.replace(toReplace[a], replacements[a].toString())));
+                }
+                actualList = temp;
+                break;
+            }
         }
+
         return this;
     }
 
     public MessageProperties replace(int index, String[] toReplace, Object... replacements)
     {
-        if (primitivesAreNull())
-        {
-            return this;
-        }
-
-        int length              = toReplace.length;
-        String[] strReplacement = new String[length];
+        int length = toReplace.length;
 
         for (int i = 0; i < length; i++)
         {
-            strReplacement[i] = String.valueOf(replacements[i]);
+            replace(index, toReplace[i], replacements[i].toString());
         }
 
-        if (primitiveMessage == null)
-        {
-            for (int i = 0; i < length; i++)
-            {
-                replace(index, toReplace[i], strReplacement[i]);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < length; i++)
-            {
-                replace(index, toReplace[i], strReplacement[i]);
-            }
-        }
         return this;
+    }
+
+    private void updatePrefix(String prefix)
+    {
+        switch (type)
+        {
+            case STRING:
+            {
+                primitiveMessage = Shortcuts.color(primitiveMessage.replace("{prefix}", prefix));
+                actualMessage = primitiveMessage;
+                break;
+            }
+            case LIST:
+            {
+                primitiveList.replaceAll(s -> Shortcuts.color(s.replace("{prefix}", prefix)));
+                actualList = primitiveList;
+                break;
+            }
+        }
     }
 
     public MessageProperties withPrefix(String prefix)
@@ -194,16 +180,7 @@ public class MessageProperties
         this.prefix = prefix;
         prefixed    = true;
 
-        if (primitiveMessage == null)
-        {
-            primitiveList.replaceAll(s -> Shortcuts.color(s.replace("{prefix}", prefix)));
-            actualList = primitiveList;
-        }
-        else
-        {
-            primitiveMessage = Shortcuts.color(primitiveMessage.replace("{prefix}", prefix));
-            actualMessage = primitiveMessage;
-        }
+        updatePrefix(prefix);
 
         return this;
     }
@@ -213,16 +190,7 @@ public class MessageProperties
         this.prefix = "";
         prefixed    = false;
 
-        if (primitiveMessage == null)
-        {
-            primitiveList.replaceAll(s -> Shortcuts.color(s.replace("{prefix}", prefix)));
-            actualList = primitiveList;
-        }
-        else
-        {
-            primitiveMessage = Shortcuts.color(primitiveMessage.replace("{prefix}", prefix));
-            actualMessage = primitiveMessage;
-        }
+        updatePrefix(prefix);
 
         return this;
     }
@@ -237,9 +205,10 @@ public class MessageProperties
         return actualList;
     }
 
-    private boolean primitivesAreNull()
+    public enum Type
     {
-        return primitiveMessage == null && primitiveList == null;
+        STRING,
+        LIST
     }
 
 }

@@ -9,28 +9,37 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+/**
+ * Represents a database worker.
+ * @since 1.4
+ * @author Sorridi
+ */
 @SuppressWarnings({"BusyWait", "unused"})
 @Getter
 public class Database extends Thread
 {
-    private final JavaPlugin    javaPlugin;
-    private final Logger        logger;
+    private final JavaPlugin        javaPlugin;
+    private final Logger            logger;
+    private final DatabasesManager  databasesManager;
 
-    private final DatabasesManager              databasesManager;
     @Setter
-    private DatabaseConnection                  databaseConnection;
-    @Setter
-    private BlockingQueue<DatabaseOperation>    databaseOperations;
+    private DatabaseConnection databaseConnection;
+    private final ConcurrentLinkedQueue<DatabaseOperation> operations;
 
     private boolean debug, running, locked;
     private long    timeToWait;
     private int     opsCounter;
 
+    /**
+     * Creates a new database worker.
+     * @param javaPlugin            The plugin.
+     * @param databasesManager      The databases manager.
+     * @param databaseConnection    The database connection.
+     */
     public Database(
                         JavaPlugin          javaPlugin,
             @NotNull    DatabasesManager    databasesManager,
@@ -42,37 +51,54 @@ public class Database extends Thread
         this.debug              = false;
         this.timeToWait         = 100;
         this.databasesManager   = databasesManager;
-
-        this.databaseOperations = new LinkedBlockingQueue<>();
+        this.operations         = new ConcurrentLinkedQueue<>();
         this.databaseConnection = databaseConnection;
+        this.running            = true;
 
         databasesManager.addDatabase(this);
 
-        setName("Aevy-Database #" + databasesManager.getDatabasesNum());
-        this.running = true;
+        setName("aevy-db #" + databasesManager.getDatabasesNum());
         start();
     }
 
+    /**
+     * Sets the sleep time of the thread.
+     * @param timeToWait    The time to wait.
+     * @param timeUnit      The time unit.
+     * @return The database.
+     */
     public Database with(int timeToWait, TimeUnit timeUnit)
     {
         this.timeToWait = timeUnit.toMillis(timeToWait);
         return this;
     }
 
+    /**
+     * Adds a database operation to the queue.
+     * @param databaseOperation The database operation.
+     */
     public void add(@Nullable DatabaseOperation databaseOperation)
     {
         if (databaseOperation == null)
             return;
 
-        databaseOperations.add(databaseOperation);
+        operations.add(databaseOperation);
     }
 
+    /**
+     * Sets the debug mode.
+     * @param value The value.
+     * @return The database.
+     */
     public Database debug(boolean value)
     {
         debug = value;
         return this;
     }
 
+    /**
+     * Stops the thread.
+     */
     public void stopRunning()
     {
         running = false;
@@ -105,11 +131,18 @@ public class Database extends Thread
         }
     }
 
+    /**
+     * Checks if the queue is empty.
+     * @return {@code true} if the queue is empty.
+     */
     public boolean isEmptyQueue()
     {
-        return databaseOperations.isEmpty();
+        return operations.isEmpty();
     }
 
+    /**
+     * Runs the operations.
+     */
     public void runOps()
     {
         locked = true;
@@ -119,7 +152,7 @@ public class Database extends Thread
             connection = databaseConnection.getDataSource().getConnection();
 
             DatabaseOperation databaseOperation;
-            while ((databaseOperation = databaseOperations.poll()) != null)
+            while ((databaseOperation = operations.poll()) != null)
             {
                 databaseOperation.writePaper(connection, databaseConnection);
                 opsCounter++;
