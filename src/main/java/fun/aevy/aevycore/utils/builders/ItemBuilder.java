@@ -1,7 +1,8 @@
 package fun.aevy.aevycore.utils.builders;
 
+import fun.aevy.aevycore.utils.Shortcuts;
+import lombok.Getter;
 import lombok.SneakyThrows;
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -23,47 +24,48 @@ import java.util.Map;
  * <i>Please do credit me if you do use this in one of your projects.</i>
  * @author NonameSL
  */
+@Getter
 public class ItemBuilder
 {
-    private final ItemStack is;
+    private final ItemStack itemStack;
 
     /**
      * Create a new ItemBuilder from scratch.
-     * @param m The material to create the ItemBuilder with.
+     * @param material The material to create the ItemBuilder with.
      */
-    public ItemBuilder(Material m)
+    public ItemBuilder(Material material)
     {
-        this(m, 1);
+        this(material, 1);
     }
 
     /**
      * Create a new ItemBuilder over an existing itemstack.
-     * @param is The itemstack to create the ItemBuilder over.
+     * @param itemStack The itemstack to create the ItemBuilder over.
      */
-    public ItemBuilder(ItemStack is)
+    public ItemBuilder(ItemStack itemStack)
     {
-        this.is = is;
+        this.itemStack = itemStack;
     }
 
     /**
      * Create a new ItemBuilder from scratch.
-     * @param m The material of the item.
-     * @param amount The amount of the item.
+     * @param material  The material of the item.
+     * @param amount    The amount of the item.
      */
-    public ItemBuilder(Material m, int amount)
+    public ItemBuilder(Material material, int amount)
     {
-        is = new ItemStack(m, amount);
+        itemStack = new ItemStack(material, amount);
     }
 
     /**
      * Create a new ItemBuilder from scratch.
-     * @param m The material of the item.
-     * @param amount The amount of the item.
-     * @param durability The durability of the item.
+     * @param material      The material of the item.
+     * @param amount        The amount of the item.
+     * @param durability    The durability of the item.
      */
-    public ItemBuilder(Material m, int amount, byte durability)
+    public ItemBuilder(Material material, int amount, byte durability)
     {
-        is = new ItemStack(m, amount, durability);
+        itemStack = new ItemStack(material, amount, durability);
     }
 
     /**
@@ -72,7 +74,7 @@ public class ItemBuilder
      */
     public ItemBuilder clone()
     {
-        return new ItemBuilder(is);
+        return new ItemBuilder(itemStack);
     }
 
     /**
@@ -82,7 +84,7 @@ public class ItemBuilder
      */
     public ItemBuilder setDurability(short dur)
     {
-        is.setDurability(dur);
+        itemStack.setDurability(dur);
         return this;
     }
 
@@ -93,9 +95,9 @@ public class ItemBuilder
      */
     public ItemBuilder addItemFlag(ItemFlag itemFlag)
     {
-        ItemMeta im = is.getItemMeta();
-        im.addItemFlags(itemFlag);
-        is.setItemMeta(im);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.addItemFlags(itemFlag);
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
 
@@ -106,9 +108,9 @@ public class ItemBuilder
      */
     public ItemBuilder setUnbreakable(boolean bool)
     {
-        ItemMeta im = is.getItemMeta();
-        im.setUnbreakable(bool);
-        is.setItemMeta(im);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setUnbreakable(bool);
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
 
@@ -119,21 +121,21 @@ public class ItemBuilder
      */
     public ItemBuilder setName(String name)
     {
-        ItemMeta im = is.getItemMeta();
-        im.setDisplayName(ChatColor.translateAlternateColorCodes('&',name));
-        is.setItemMeta(im);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(Shortcuts.color(name));
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
 
     /**
      * Add an unsafe enchantment.
-     * @param enchantment The enchantment to add.
-     * @param level The level to put the enchant on.
+     * @param enchantment   The enchantment to add.
+     * @param level         The level to put the enchant on.
      * @return The item with the new unsafe enchantment.
      */
     public ItemBuilder addUnsafeEnchantment(Enchantment enchantment, int level)
     {
-        is.addUnsafeEnchantment(enchantment, level);
+        itemStack.addUnsafeEnchantment(enchantment, level);
         return this;
     }
 
@@ -144,7 +146,7 @@ public class ItemBuilder
      */
     public ItemBuilder removeEnchantment(Enchantment enchantment)
     {
-        is.removeEnchantment(enchantment);
+        itemStack.removeEnchantment(enchantment);
         return this;
     }
 
@@ -156,23 +158,23 @@ public class ItemBuilder
     @SneakyThrows
     public ItemBuilder setSkullOwner(String owner)
     {
-        SkullMeta im = (SkullMeta) is.getItemMeta();
-        im.setOwner(owner);
-        is.setItemMeta(im);
+        SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
+        itemMeta.setOwner(owner);
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
 
     /**
      * Add an enchant to the item.
-     * @param enchantment The enchant to add
-     * @param level The level
+     * @param enchantment   The enchantment to add
+     * @param level         The level
      * @return The item with the enchantment added.
      */
     public ItemBuilder addEnchant(Enchantment enchantment, int level)
     {
-        ItemMeta im = is.getItemMeta();
-        im.addEnchant(enchantment, level, true);
-        is.setItemMeta(im);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.addEnchant(enchantment, level, true);
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
 
@@ -183,7 +185,7 @@ public class ItemBuilder
      */
     public ItemBuilder addEnchantments(Map<Enchantment, Integer> enchantments)
     {
-        is.addEnchantments(enchantments);
+        itemStack.addEnchantments(enchantments);
         return this;
     }
 
@@ -193,7 +195,7 @@ public class ItemBuilder
      */
     public ItemBuilder setInfiniteDurability()
     {
-        is.setDurability(Short.MAX_VALUE);
+        itemStack.setDurability(Short.MAX_VALUE);
         return this;
     }
 
@@ -214,11 +216,13 @@ public class ItemBuilder
      */
     public ItemBuilder setLore(List<String> lore)
     {
-        ItemMeta im = is.getItemMeta();
+        ItemMeta itemMeta = itemStack.getItemMeta();
         List<String> list = new ArrayList<>();
-        lore.forEach(s -> list.add(ChatColor.translateAlternateColorCodes('&', s)));
-        im.setLore(list);
-        is.setItemMeta(im);
+
+        lore.forEach(s -> list.add(Shortcuts.color(s)));
+
+        itemMeta.setLore(list);
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
 
@@ -228,15 +232,16 @@ public class ItemBuilder
      */
     public ItemBuilder removeLoreLine(String line)
     {
-        ItemMeta im = is.getItemMeta();
-        List<String> lore = new ArrayList<>(im.getLore());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        List<String> lore = new ArrayList<>(itemMeta.getLore());
 
-        if (!lore.contains(line))
-            return this;
+        if (lore.contains(line))
+        {
+            lore.remove(line);
+            itemMeta.setLore(lore);
+            itemStack.setItemMeta(itemMeta);
+        }
 
-        lore.remove(line);
-        im.setLore(lore);
-        is.setItemMeta(im);
         return this;
     }
 
@@ -247,15 +252,16 @@ public class ItemBuilder
      */
     public ItemBuilder removeLoreLine(int index)
     {
-        ItemMeta im = is.getItemMeta();
-        List<String> lore = new ArrayList<>(im.getLore());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        List<String> lore = new ArrayList<>(itemMeta.getLore());
 
-        if (index < 0 || index > lore.size())
-            return this;
+        if (index >= 0 && index <= lore.size())
+        {
+            lore.remove(index);
+            itemMeta.setLore(lore);
+            itemStack.setItemMeta(itemMeta);
+        }
 
-        lore.remove(index);
-        im.setLore(lore);
-        is.setItemMeta(im);
         return this;
     }
 
@@ -266,29 +272,30 @@ public class ItemBuilder
      */
     public ItemBuilder addLoreLine(String line)
     {
-        ItemMeta im = is.getItemMeta();
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        List<String> lore = itemMeta.hasLore() ? new ArrayList<>(itemMeta.getLore()) : new ArrayList<>();
 
-        List<String> lore = im.hasLore() ? new ArrayList<>(im.getLore()) : new ArrayList<>();
-        lore.add(ChatColor.translateAlternateColorCodes('&', line));
+        lore.add(Shortcuts.color(line));
 
-        im.setLore(lore);
-        is.setItemMeta(im);
+        itemMeta.setLore(lore);
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
 
     /**
      * Add a lore line.
-     * @param line The lore line to add.
-     * @param pos The index of where to put it.
+     * @param line  The lore line to add.
+     * @param pos   The index of where to put it.
      * @return The item with the new lore line added.
      */
     public ItemBuilder addLoreLine(String line, int pos)
     {
-        ItemMeta im = is.getItemMeta();
-        List<String> lore = new ArrayList<>(im.getLore());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        List<String> lore = new ArrayList<>(itemMeta.getLore());
+
         lore.set(pos, line);
-        im.setLore(lore);
-        is.setItemMeta(im);
+        itemMeta.setLore(lore);
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
 
@@ -300,7 +307,7 @@ public class ItemBuilder
     @SuppressWarnings("deprecation")
     public ItemBuilder setDyeColor(DyeColor color)
     {
-        is.setDurability(color.getDyeData());
+        itemStack.setDurability(color.getDyeData());
         return this;
     }
 
@@ -314,10 +321,11 @@ public class ItemBuilder
     @Deprecated
     public ItemBuilder setWoolColor(DyeColor color)
     {
-        if (!is.getType().equals(Material.WOOL))
-            return this;
+        if (itemStack.getType().equals(Material.WOOL))
+        {
+            itemStack.setDurability(color.getDyeData());
+        }
 
-        is.setDurability(color.getDyeData());
         return this;
     }
 
@@ -329,9 +337,9 @@ public class ItemBuilder
     @SneakyThrows
     public ItemBuilder setLeatherArmorColor(Color color)
     {
-        LeatherArmorMeta im = (LeatherArmorMeta) is.getItemMeta();
-        im.setColor(color);
-        is.setItemMeta(im);
+        LeatherArmorMeta itemMeta = (LeatherArmorMeta) itemStack.getItemMeta();
+        itemMeta.setColor(color);
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
 
@@ -341,7 +349,7 @@ public class ItemBuilder
      */
     public ItemStack toItemStack()
     {
-        return is;
+        return itemStack;
     }
 
 }

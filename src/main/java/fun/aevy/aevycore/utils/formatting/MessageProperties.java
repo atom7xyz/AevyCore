@@ -197,7 +197,7 @@ public class MessageProperties
 
     public String getMessage()
     {
-        return actualMessage;
+        return actualMessage == null ? "" : actualMessage;
     }
 
     public List<String> getMessages()
