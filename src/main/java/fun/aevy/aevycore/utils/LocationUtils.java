@@ -27,13 +27,13 @@ public class LocationUtils
         World world     = location.getWorld();
         World _world    = toCompare.getWorld();
 
-        int x = location.getBlockX();
-        int y = location.getBlockY();
-        int z = location.getBlockZ();
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
 
-        int _x = toCompare.getBlockX();
-        int _y = toCompare.getBlockY();
-        int _z = toCompare.getBlockZ();
+        double _x = toCompare.getX();
+        double _y = toCompare.getY();
+        double _z = toCompare.getZ();
 
         return (world == _world) && (x == _x) && (y == _y) && (z == _z);
     }
@@ -53,11 +53,25 @@ public class LocationUtils
      * @param location The location to extract from.
      * @return The extracted string.
      */
+    public static String extractStringPrecise(Location location)
+    {
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+
+        return concat(x, y, z);
+    }
+
+    /**
+     * Extracts the X, Y, Z of a location in a String, using X:Y:Z format.
+     * @param location The location to extract from.
+     * @return The extracted string.
+     */
     public static String extractString(Location location)
     {
-        int x = location.getBlockX();
-        int y = location.getBlockY();
-        int z = location.getBlockZ();
+        int x = (int) location.getX();
+        int y = (int) location.getY();
+        int z = (int) location.getZ();
 
         return concat(x, y, z);
     }
@@ -76,9 +90,9 @@ public class LocationUtils
 
         String worldName = location.getWorld().getName();
 
-        int x = location.getBlockX();
-        int y = location.getBlockY();
-        int z = location.getBlockZ();
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
 
         float yaw   = location.getYaw();
         float pitch = location.getPitch();
@@ -117,11 +131,11 @@ public class LocationUtils
      */
     public static Location getLocationFromString(String stringLocation, boolean full)
     {
-        Location location = null;
+        Location location;
 
         if (stringLocation == null)
         {
-            return location;
+            return null;
         }
 
         String[] parts = stringLocation.split(":");
@@ -156,9 +170,9 @@ public class LocationUtils
     {
         World world = location.getWorld();
 
-        double x = location.getBlockY() + .5;
+        double x = (int) location.getX() + .5;
         double y = location.getY();
-        double z = location.getBlockZ() + .5;
+        double z = (int) location.getZ() + .5;
 
         if (yawPitch)
         {

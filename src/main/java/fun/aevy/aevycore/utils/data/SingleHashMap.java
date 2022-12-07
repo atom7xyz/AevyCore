@@ -20,9 +20,9 @@ public class SingleHashMap<K> extends HashMap<K, K>
         return putIfAbsent(key, key);
     }
 
-    public Stream<Entry<K, K>> stream(K key)
+    public Stream<K> stream()
     {
-        return entrySet().stream();
+        return keySet().stream();
     }
 
 }

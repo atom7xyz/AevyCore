@@ -22,7 +22,7 @@ aevycore:
     VERSION:
       - " "
       - "{prefix} v{ver} ({hash})"
-      - "{prefix} made by &cSorridi &7- &c{site}"
+      - "{prefix} author: &cSorridi &7» &c{site}"
       - " "
 
 database:
