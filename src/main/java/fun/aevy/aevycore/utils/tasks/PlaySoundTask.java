@@ -179,10 +179,10 @@ public class PlaySoundTask extends Scheduler
 
     /**
      * Plays a sound to an entity.
-     * @param entity    Entity to play the sound to.
+     * @param location  Location to play the sound at.
      * @param sound     Sound to play.
-     * @param volume    Volume of the sound.
-     * @param pitch     Pitch of the sound.
+     * @param entity    Entity to play the sound to.
+     * @param range     Range to play the sound at.
      */
     public void runTask(Location location, Sound sound, Entity entity, int range)
     {

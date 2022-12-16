@@ -6,6 +6,7 @@ import fun.aevy.aevycore.utils.configuration.elements.CoolConfig;
 import fun.aevy.aevycore.utils.configuration.entries.Aevy;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,7 +86,7 @@ public class DatabaseConnection
         this.properties     = new HashMap<>();
         this.useDefaults    = (boolean) coolConfig.getValue(Aevy.Database.USE_DEFAULTS);
         this.poolSize       = (int) coolConfig.getValue(Aevy.Database.MAX_POOL_SIZE);
-        List<String> list   = (List<String>) coolConfig.getValue(Aevy.Database.PROPERTIES);
+        val list            = (List<String>) coolConfig.getValue(Aevy.Database.PROPERTIES);
 
         for (String s : list)
         {

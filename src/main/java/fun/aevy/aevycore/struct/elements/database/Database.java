@@ -1,9 +1,11 @@
 package fun.aevy.aevycore.struct.elements.database;
 
 import fun.aevy.aevycore.struct.manager.DatabasesManager;
+import fun.aevy.aevycore.utils.builders.AverageBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.Connection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.StampedLock;
 import java.util.logging.Logger;
 
 /**
@@ -30,9 +33,11 @@ public class Database extends Thread
     private DatabaseConnection databaseConnection;
     private final ConcurrentLinkedQueue<DatabaseOperation> operations;
 
-    private boolean debug, running, locked;
+    private boolean debug, running;
     private long    timeToWait;
     private int     opsCounter;
+
+    private final StampedLock lock;
 
     /**
      * Creates a new database worker.
@@ -54,6 +59,7 @@ public class Database extends Thread
         this.operations         = new ConcurrentLinkedQueue<>();
         this.databaseConnection = databaseConnection;
         this.running            = true;
+        this.lock               = new StampedLock();
 
         databasesManager.addDatabase(this);
 
@@ -108,7 +114,7 @@ public class Database extends Thread
     @Override
     public void run()
     {
-        long time;
+        val average = new AverageBuilder(1);
 
         while (running)
         {
@@ -117,14 +123,15 @@ public class Database extends Thread
                 Thread.sleep(timeToWait);
                 continue;
             }
-            time = System.currentTimeMillis();
 
+            average.setStart();
             runOps();
+            average.setEnd();
 
             if (debug)
             {
-                String timing   = "time = " + (System.currentTimeMillis() - time) + "ms";
-                String ops      = "operations = " + opsCounter + ", ";
+                String timing   = "time = " + average.get() + "ms";
+                String ops      = "op(s) = " + opsCounter + ", ";
                 logger.info(ops + timing);
             }
             opsCounter = 0;
@@ -145,7 +152,7 @@ public class Database extends Thread
      */
     public void runOps()
     {
-        locked = true;
+        long stamp = lock.writeLock();
         Connection connection = null;
         try
         {
@@ -165,8 +172,8 @@ public class Database extends Thread
         finally
         {
             databaseConnection.close(connection);
+            lock.unlockWrite(stamp);
         }
-        locked = false;
     }
 
 }

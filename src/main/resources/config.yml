@@ -2,7 +2,7 @@ permissions:
   RELOAD: "aevycore.reload"
 
 messages:
-  PREFIX: "&b AevyCore &7»"
+  PREFIX: "&b AevyCore &7▎"
   NO_PERMS: "{prefix} &cYou can't execute this command!"
   NO_PLAYER: "{prefix} &cYou can't execute this command as a player!"
   NO_CONSOLE: "{prefix} &cYou can't execute this command as the console!"
@@ -20,10 +20,11 @@ aevycore:
   aevy-command:
     RELOAD: "{prefix} &aConfiguration has been reloaded!"
     VERSION:
-      - " "
-      - "{prefix} v{ver} ({hash})"
-      - "{prefix} author: &cSorridi &7» &c{site}"
-      - " "
+      - "&8&m-----------------------"
+      - "&8▎ &bv{ver} &7&o({hash})"
+      - "&8▎ &7author(s): &b{authors}"
+      - "&8▎ &7site: &b{site}"
+      - "&8&m-----------------------"
 
 database:
   ENABLED: false

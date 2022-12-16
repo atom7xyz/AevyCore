@@ -107,7 +107,7 @@ public class DatabasesManager
 
             database.stopRunning();
 
-            while (database.isLocked())
+            while (database.getLock().isWriteLocked())
             {
                 Thread.sleep(500);
                 logger.warning("WAITING FOR LOCKED DATABASE " + name);

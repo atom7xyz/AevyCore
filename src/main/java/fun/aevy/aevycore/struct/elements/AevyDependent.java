@@ -7,6 +7,7 @@ import fun.aevy.aevycore.utils.formatting.Send;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -30,16 +31,32 @@ public abstract class AevyDependent extends JavaPlugin
     private List<Reloadable> reloadables;
 
     /**
-     * Constructor for AevyDependent.
+     * Creates a new AevyDependent plugin.
+     * @param plugin The plugin that depends on AevyCore.
      */
-    public void enableWagie()
+    public void enable(Plugin plugin)
     {
-        currentPlugin = this;
+        AevyCore aevyCore = null;
 
-        aevyCore    = AevyCore.getInstance();
-        aevyLogger  = aevyCore.getLogger();
-        aevyConfig  = aevyCore.getCoolConfig();
-        aevySend    = aevyCore.getSend();
+        if (plugin instanceof AevyCore)
+        {
+            aevyCore = (AevyCore) plugin;
+        }
+        else
+        {
+            aevyCore = AevyCore.getInstance();
+        }
+
+        commonLoad(aevyCore);
+    }
+
+    private void commonLoad(AevyCore aevyCore)
+    {
+        this.aevyCore   = aevyCore;
+        currentPlugin   = this;
+        aevyLogger      = aevyCore.getLogger();
+        aevyConfig      = aevyCore.getCoolConfig();
+        aevySend        = aevyCore.getSend();
 
         coolConfig  = new CoolConfig(currentPlugin, ConfigType.DEFAULT);
         coolConfig.addResources(aevyCore);
@@ -49,7 +66,7 @@ public abstract class AevyDependent extends JavaPlugin
     }
 
     /**
-     * Reloads the coolConfig of the current plugin.
+     * Reloads the {@link CoolConfig} of the current plugin.
      */
     public void reloadCoolConfig()
     {

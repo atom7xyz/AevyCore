@@ -60,36 +60,6 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
         this.usage          = null;
         this.tabComplete    = false;
         this.permission     = null;
-
-        reloadDefaults();
-        reloadVars();
-    }
-
-    /**
-     * Constructor for new Commands, which they get automatically registered.
-     *
-     * @param aevyCore  The AevyDependent instance.
-     * @param command   The command itself.
-     */
-    public CommandsBuilder(
-            @NotNull    AevyCore    aevyCore,
-            @NotNull    String      command
-    ) {
-        this.aevyDependent  = null;
-        this.aevyCore       = aevyCore;
-        this.coolConfig     = aevyCore.getCoolConfig();
-        this.send           = aevyCore.getSend();
-        this.plugin         = aevyCore;
-
-        this.command        = command;
-        this.onlyPlayer     = false;
-        this.onlyConsole    = false;
-        this.usage          = null;
-        this.tabComplete    = false;
-        this.permission     = null;
-
-        reloadDefaults();
-        reloadVars();
     }
 
     public abstract boolean command(CommandSender sender, String[] args);
@@ -291,14 +261,8 @@ public abstract class CommandsBuilder implements CommandExecutor, TabCompleter, 
             plugin.getCommand(command).setTabCompleter(this);
         }
 
-        if (aevyDependent == null)
-        {
-            aevyCore.addReloadable(this);
-        }
-        else
-        {
-            aevyDependent.addReloadable(this);
-        }
+        reloadDefaults();
+        aevyDependent.addReloadable(this);
     }
 
     /**

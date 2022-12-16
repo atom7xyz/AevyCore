@@ -191,4 +191,22 @@ public class StringUtils
         return doubleDigitFormat.format(value);
     }
 
+    /**
+     * Converts a double into a String, using the format 0.0...
+     * @param value The value to be converted.
+     * @param decimals The number of decimals.
+     * @return The converted value.
+     */
+    public static String format(double value, int decimals)
+    {
+        StringBuilder format = new StringBuilder("0");
+
+        if (decimals > 0)
+        {
+            format.append(".").append("0".repeat(decimals));
+        }
+
+        return new DecimalFormat(format.toString()).format(value);
+    }
+
 }

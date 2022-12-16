@@ -1,18 +1,17 @@
 package fun.aevy.aevycore.commands;
 
 import fun.aevy.aevycore.AevyCore;
+import fun.aevy.aevycore.struct.elements.AevyDependent;
 import fun.aevy.aevycore.struct.elements.events.ConfigReloadEvent;
+import fun.aevy.aevycore.utils.VersioningUtils;
 import fun.aevy.aevycore.utils.builders.CommandsBuilder;
 import fun.aevy.aevycore.utils.configuration.entries.Aevy;
 import fun.aevy.aevycore.utils.formatting.MessageProperties;
 import fun.aevy.aevycore.utils.formatting.Send;
-import org.apache.commons.codec.digest.DigestUtils;
+import lombok.val;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class AevyCommand extends CommandsBuilder
@@ -47,7 +46,7 @@ public class AevyCommand extends CommandsBuilder
                 {
                     if (commandSender.hasPermission(reloadPerm))
                     {
-                        aevyCore.callEvent(new ConfigReloadEvent(aevyDependent));
+                        AevyDependent.callEvent(new ConfigReloadEvent(aevyDependent));
                         Send.message(commandSender, reload);
                     }
                     else
@@ -78,29 +77,21 @@ public class AevyCommand extends CommandsBuilder
     @Override
     public void reloadVars()
     {
-        PluginDescriptionFile descriptionFile = aevyCore.getDescription();
+        val versioning = new VersioningUtils(aevyCore);
 
-        String plName   = descriptionFile.getName();
-        String plVers   = descriptionFile.getVersion();
-        String plSite   = descriptionFile.getWebsite();
-        String fileName = plName + "-" + plVers + ".jar";
-        String fileHash = "unknown hash";
-
-        try
-        {
-            byte[] file = Files.readAllBytes(Paths.get("./plugins/" + fileName));
-            fileHash = DigestUtils.md5Hex(file).toLowerCase().substring(0, 8);
-        }
-        catch (Exception ignored) { }
-
-        setUsage(Aevy.Usages.AEVY);
+        reloadPerm = (String) coolConfig.getValue(Aevy.Perms.RELOAD);
 
         reload  = coolConfig.getProperties(Aevy.CommandAevy.RELOAD);
         version = coolConfig.getProperties(Aevy.CommandAevy.VERSION);
 
-        version.replace(new String[] { "{ver}", "{hash}", "{site}" }, plVers, fileHash, plSite);
+        String ver  = versioning.getVersion();
+        String hash = versioning.getHash();
+        String site = versioning.getSite();
+        val authors = versioning.getAuthors();
 
-        reloadPerm = (String) coolConfig.getValue(Aevy.Perms.RELOAD);
+        val replace = new String[] { "{ver}", "{hash}", "{authors}", "{site}" };
+
+        version.replace(replace, ver, hash, authors, site);
     }
 
 }

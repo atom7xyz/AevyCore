@@ -5,6 +5,8 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.stream.Stream;
+
 /**
  * Utility class used to play sounds.
  */
@@ -68,6 +70,20 @@ public class SoundUtils
     }
 
     /**
+     * Gets the players within a certain radius of an entity.
+     * @param entity    Entity to get the players around.
+     * @param range     Range to get the players in.
+     * @return          Stream of players within the range.
+     */
+    private static Stream<Entity> toPlayers(Entity entity, int range)
+    {
+        return entity
+                .getNearbyEntities(range, range, range)
+                .stream()
+                .filter(e -> e instanceof Player);
+    }
+
+    /**
      * Plays a sound to players nearby an entity.
      * @param sound     Sound to play.
      * @param entity    Entity to play the sound to.
@@ -75,11 +91,7 @@ public class SoundUtils
      */
     public static void playNearby(Sound sound, Entity entity, int range)
     {
-        entity
-                .getNearbyEntities(range, range, range)
-                .stream()
-                .filter(e -> e instanceof Player)
-                .forEach(e -> play((Player) e, sound));
+        toPlayers(entity, range).forEach(e -> play((Player) e, sound));
     }
 
     /**
@@ -92,11 +104,7 @@ public class SoundUtils
      */
     public static void playNearby(Sound sound, Entity entity, int volume, int pitch, int range)
     {
-        entity
-                .getNearbyEntities(range, range, range)
-                .stream()
-                .filter(e -> e instanceof Player)
-                .forEach(e -> play((Player) e, sound, volume, pitch));
+        toPlayers(entity, range).forEach(e -> play((Player) e, sound, volume, pitch));
     }
 
     /**
@@ -108,11 +116,7 @@ public class SoundUtils
      */
     public static void playNearby(Location location, Sound sound, Entity entity, int range)
     {
-        entity
-                .getNearbyEntities(range, range, range)
-                .stream()
-                .filter(e -> e instanceof Player)
-                .forEach(e -> play((Player) e, sound, location));
+        toPlayers(entity, range).forEach(e -> play((Player) e, sound, location));
     }
 
     /**
@@ -126,10 +130,7 @@ public class SoundUtils
      */
     public static void playNearby(Location location, Sound sound, Entity entity, int volume, int pitch, int range)
     {
-        entity
-                .getNearbyEntities(range, range, range)
-                .stream()
-                .filter(e -> e instanceof Player)
-                .forEach(e -> play((Player) e, sound, volume, pitch, location));
+        toPlayers(entity, range).forEach(e -> play((Player) e, sound, volume, pitch, location));
     }
+
 }
